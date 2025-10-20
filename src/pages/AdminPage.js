@@ -58,115 +58,154 @@ function AdminPage() {
   const brandArray = Object.values(BRANDS);
 
   return (
-    <main style={{ padding: '40px 20px', maxWidth: '1400px', margin: '0 auto' }}>
-      {/* Back to Home Link */}
-      <div style={{ marginBottom: '20px' }}>
-        <button
-          onClick={() => navigate('/')}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px',
-            padding: '12px 24px',
-            background: 'white',
-            border: '2px solid #e0e0e0',
-            borderRadius: '10px',
-            fontSize: '16px',
-            fontWeight: '600',
-            color: '#666',
-            cursor: 'pointer',
-            transition: 'all 0.2s',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = '#667eea';
-            e.currentTarget.style.color = '#667eea';
-            e.currentTarget.style.transform = 'translateX(-3px)';
-            e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = '#e0e0e0';
-            e.currentTarget.style.color = '#666';
-            e.currentTarget.style.transform = 'translateX(0)';
-            e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.05)';
-          }}
-        >
-          <span style={{ fontSize: '18px' }}>←</span>
-          <span>Back to RetailZero Home</span>
-        </button>
-      </div>
-
-      {/* Header */}
-      <div style={{ marginBottom: '40px' }}>
-        <div style={{
-          display: 'inline-block',
-          padding: '8px 20px',
-          background: '#28a745',
-          color: 'white',
-          borderRadius: '20px',
-          fontSize: '14px',
-          fontWeight: '600',
-          marginBottom: '15px'
-        }}>
-          🛡️ ADMIN ACCESS
-        </div>
-        <h1 style={{ fontSize: '42px', color: '#333', marginBottom: '10px' }}>
-          RetailZero Admin Panel
-        </h1>
-        <p style={{ fontSize: '18px', color: '#666' }}>
-          Manage all brands and system configurations
-        </p>
-      </div>
-
-      {/* Admin Info Card */}
+    <main style={{ 
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      padding: '0'
+    }}>
+      {/* Header Section */}
       <div style={{
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        padding: '30px',
-        borderRadius: '15px',
-        color: 'white',
-        marginBottom: '40px',
-        boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)'
+        background: 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 100%)',
+        borderBottom: '1px solid rgba(0,0,0,0.1)',
+        boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-          <div style={{
-            width: '80px',
-            height: '80px',
-            background: 'rgba(255,255,255,0.2)',
-            borderRadius: '50%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '40px'
-          }}>
-            {user?.picture ? (
-              <img src={user.picture} alt={user.name} style={{ width: '100%', height: '100%', borderRadius: '50%' }} />
-            ) : (
-              '👤'
-            )}
-          </div>
-          <div style={{ flex: 1 }}>
-            <h3 style={{ fontSize: '24px', marginBottom: '5px' }}>
-              {user?.name || 'Admin User'}
-            </h3>
-            <p style={{ opacity: 0.9, marginBottom: '10px' }}>
-              {user?.email}
-            </p>
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              {roles.map(role => (
-                <span key={role} style={{
-                  padding: '4px 12px',
+        <div style={{ 
+          maxWidth: '1400px', 
+          margin: '0 auto',
+          padding: '30px 40px'
+        }}>
+          {/* Header Content */}
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '30px', flexWrap: 'wrap' }}>
+            {/* Left: Back Button */}
+            <div style={{ flex: '0 0 240px', minWidth: '240px' }}>
+              <button
+                onClick={() => navigate('/')}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '10px 20px',
+                  background: 'white',
+                  border: '2px solid #e0e0e0',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  color: '#666',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = '#667eea';
+                  e.currentTarget.style.color = '#667eea';
+                  e.currentTarget.style.transform = 'translateX(-3px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = '#e0e0e0';
+                  e.currentTarget.style.color = '#666';
+                  e.currentTarget.style.transform = 'translateX(0)';
+                }}
+              >
+                <span style={{ fontSize: '16px' }}>←</span>
+                <span>Back to RetailZero Home</span>
+              </button>
+            </div>
+
+            {/* Center: Title */}
+            <div style={{ flex: 1, minWidth: '300px', textAlign: 'center' }}>
+              <h1 style={{ 
+                fontSize: '36px', 
+                color: '#333', 
+                marginBottom: '8px',
+                fontWeight: '700',
+                letterSpacing: '-0.5px'
+              }}>
+                RetailZero Admin Panel
+              </h1>
+              <p style={{ fontSize: '16px', color: '#666', margin: 0 }}>
+                Manage all brands and system configurations
+              </p>
+            </div>
+
+            {/* Right: Admin Profile Card */}
+            <div style={{
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              padding: '20px 25px',
+              borderRadius: '12px',
+              color: 'white',
+              flex: '0 0 320px',
+              minWidth: '320px',
+              boxShadow: '0 8px 20px rgba(102, 126, 234, 0.25)'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                <div style={{
+                  width: '60px',
+                  height: '60px',
                   background: 'rgba(255,255,255,0.2)',
-                  borderRadius: '12px',
-                  fontSize: '12px',
-                  fontWeight: '600'
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '28px',
+                  flexShrink: 0
                 }}>
-                  {role.toUpperCase()}
-                </span>
-              ))}
+                  {user?.picture ? (
+                    <img src={user.picture} alt={user.name} style={{ width: '100%', height: '100%', borderRadius: '50%' }} />
+                  ) : (
+                    <span style={{ fontSize: '24px' }}>
+                      {(user?.name || user?.email || 'A').charAt(0).toUpperCase()}
+                    </span>
+                  )}
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <h3 style={{ 
+                    fontSize: '18px', 
+                    marginBottom: '4px',
+                    fontWeight: '600',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                  }}>
+                    {user?.name || 'Admin User'}
+                  </h3>
+                  <p style={{ 
+                    opacity: 0.9, 
+                    marginBottom: '8px',
+                    fontSize: '13px',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                  }}>
+                    {user?.email}
+                  </p>
+                  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                    {roles.map(role => (
+                      <span key={role} style={{
+                        padding: '3px 10px',
+                        background: 'rgba(255,255,255,0.25)',
+                        borderRadius: '10px',
+                        fontSize: '11px',
+                        fontWeight: '700',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.5px'
+                      }}>
+                        {role}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Content Section */}
+      <div style={{ 
+        maxWidth: '1400px', 
+        margin: '0 auto',
+        padding: '40px'
+      }}>
 
       {/* Dashboard Widgets */}
       <div style={{
@@ -412,6 +451,7 @@ function AdminPage() {
             Multi-brand performance metrics and insights
           </p>
         </div>
+      </div>
       </div>
     </main>
   );
