@@ -1,16 +1,23 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 import { BRANDS } from '../config/brands';
 import { useBrand } from '../context/BrandContext';
 
 function RetailZeroHome() {
   const navigate = useNavigate();
   const { switchBrand } = useBrand();
+  const { isAuthenticated, user } = useAuth0();
 
   const handleBrandSelect = (brand) => {
     switchBrand(brand.id);
     navigate('/brand');
   };
+
+  // Check if user is employee or admin
+  const roles = user?.['https://retailzero.com/roles'] || [];
+  const isInternal = roles.includes('admin') || roles.includes('employee');
+  const userName = user?.name || user?.email;
 
   return (
     <div style={{
@@ -23,6 +30,51 @@ function RetailZeroHome() {
         margin: '0 auto',
         textAlign: 'center'
       }}>
+        {/* Internal User Indicator */}
+        {isAuthenticated && isInternal && (
+          <div style={{
+            background: 'linear-gradient(135deg, #00b894 0%, #00cec9 100%)',
+            borderRadius: '15px',
+            padding: '20px 30px',
+            marginBottom: '30px',
+            boxShadow: '0 10px 30px rgba(0,184,148,0.3)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '15px',
+            animation: 'slideDown 0.5s ease-out'
+          }}>
+            <div style={{
+              width: '50px',
+              height: '50px',
+              background: 'rgba(255,255,255,0.3)',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '24px'
+            }}>
+              ✓
+            </div>
+            <div style={{ textAlign: 'left' }}>
+              <div style={{
+                color: 'white',
+                fontSize: '20px',
+                fontWeight: '700',
+                marginBottom: '5px'
+              }}>
+                Internal Access Granted
+              </div>
+              <div style={{
+                color: 'rgba(255,255,255,0.9)',
+                fontSize: '14px'
+              }}>
+                Welcome back, {userName} • {roles.includes('admin') ? 'Administrator' : 'Employee'} • Full access to all brands
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* RetailZero Header */}
         <div style={{
           background: 'white',
