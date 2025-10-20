@@ -2,19 +2,10 @@
 
 // Central organization for all employees and admins across brands
 export const RETAILZERO_ORG = {
-  id: 'retailzero',
-  name: 'RetailZero',
+  name: 'retailzero',
   displayName: 'RetailZero',
-  orgId: 'org_NEED_TO_CREATE', // This will be created for employees/admins
-  primaryColor: '#667eea',
-  secondaryColor: '#764ba2',
-  theme: {
-    primary: '#667eea',
-    secondary: '#764ba2'
-  },
-  description: 'Central organization for RetailZero employees and administrators',
-  logo: '/logos/retailzero.png',
-  isInternal: true
+  orgId: 'org_K6sjZprHVLfXgIzs',
+  description: 'Central organization for all RetailZero employees and administrators'
 };
 
 export const BRANDS = {
@@ -74,7 +65,7 @@ export const BRANDS = {
       primary: '#4361EE',
       secondary: '#3F37C9'
     },
-    description: 'Office supplies and furniture for modern workspaces',
+    description: 'Office supplies and workspace essentials',
     logo: '/logos/officezero.png',
     features: ['Office Essentials', 'Bulk Pricing', 'Fast Delivery']
   },

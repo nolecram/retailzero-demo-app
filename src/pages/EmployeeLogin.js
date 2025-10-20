@@ -1,14 +1,32 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
-import { RETAILZERO_ORG } from '../config/brands';
+import { RETAILZERO_ORG, BRANDS } from '../config/brands';
 
 function EmployeeLogin() {
-  const { loginWithRedirect } = useAuth0();
+  const { loginWithRedirect, isAuthenticated, user } = useAuth0();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      const roles = user?.['https://retailzero.com/roles'] || user?.app_metadata?.roles || [];
+      
+      // Set a default brand (AutoZero) for the context after employee login
+      if (roles.includes('admin')) {
+        navigate('/brand/admin-authenticated');
+      } else if (roles.includes('employee')) {
+        navigate('/brand/employee-authenticated');
+      }
+    }
+  }, [isAuthenticated, user, navigate]);
 
   const handleEmployeeLogin = () => {
     loginWithRedirect({
       authorizationParams: {
         organization: RETAILZERO_ORG.orgId
+      },
+      appState: {
+        returnTo: '/employee-login'
       }
     });
   };

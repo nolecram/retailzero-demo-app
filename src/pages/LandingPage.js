@@ -1,15 +1,37 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useBrand } from '../context/BrandContext';
 import { useAuth0 } from '@auth0/auth0-react';
 
 function LandingPage() {
   const { currentBrand } = useBrand();
-  const { isAuthenticated, loginWithRedirect } = useAuth0();
+  const { isAuthenticated, loginWithRedirect, user } = useAuth0();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      // Get user roles
+      const roles = user?.['https://retailzero.com/roles'] || user?.app_metadata?.roles || [];
+      
+      // Redirect based on role
+      if (roles.includes('admin')) {
+        navigate('/brand/admin-authenticated');
+      } else if (roles.includes('employee')) {
+        navigate('/brand/employee-authenticated');
+      } else {
+        // Customer or no role
+        navigate('/brand/customer-authenticated');
+      }
+    }
+  }, [isAuthenticated, user, navigate]);
 
   const handleLogin = () => {
     loginWithRedirect({
       authorizationParams: {
         organization: currentBrand.orgId
+      },
+      appState: {
+        returnTo: '/brand'
       }
     });
   };

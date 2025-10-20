@@ -9,6 +9,9 @@ import Dashboard from './pages/Dashboard';
 import EmployeePortal from './pages/EmployeePortal';
 import EmployeeLogin from './pages/EmployeeLogin';
 import AdminPage from './pages/AdminPage';
+import CustomerAuthenticated from './pages/CustomerAuthenticated';
+import EmployeeAuthenticated from './pages/EmployeeAuthenticated';
+import AdminAuthenticated from './pages/AdminAuthenticated';
 import './App.css';
 
 // Custom wrapper to pass organization during authentication
@@ -31,16 +34,25 @@ const ProtectedRoute = ({ component: Component, requireAdmin = false }) => {
   );
 };
 
-const AdminComponent = () => {
+const CustomerComponent = () => {
   const { user } = useAuth0();
   const roles = user?.['https://retailzero.com/roles'] || user?.app_metadata?.roles || [];
-  return roles.includes('admin') ? <AdminPage /> : <p>Access denied: Admins only</p>;
+  // Allow customer role OR users without any role (default access)
+  return roles.includes('customer') || roles.length === 0 || (!roles.includes('employee') && !roles.includes('admin')) ? 
+    <Dashboard /> : 
+    <p>Access denied: Customers only</p>;
 };
 
 const EmployeeComponent = () => {
   const { user } = useAuth0();
   const roles = user?.['https://retailzero.com/roles'] || user?.app_metadata?.roles || [];
   return roles.includes('employee') || roles.includes('admin') ? <EmployeePortal /> : <p>Access denied: Employees only</p>;
+};
+
+const AdminComponent = () => {
+  const { user } = useAuth0();
+  const roles = user?.['https://retailzero.com/roles'] || user?.app_metadata?.roles || [];
+  return roles.includes('admin') ? <AdminPage /> : <p>Access denied: Admins only</p>;
 };
 
 function App() {
@@ -56,9 +68,12 @@ function App() {
         {/* Brand-specific pages with Nav */}
         <Route path="/brand" element={<BrandLayout />}>
           <Route index element={<LandingPage />} />
-          <Route path="customer" element={<ProtectedRoute component={Dashboard} />} />
+          <Route path="customer" element={<ProtectedRoute component={CustomerComponent} />} />
           <Route path="employee" element={<ProtectedRoute component={EmployeeComponent} />} />
           <Route path="admin" element={<ProtectedRoute component={AdminComponent} requireAdmin />} />
+          <Route path="customer-authenticated" element={<ProtectedRoute component={CustomerAuthenticated} />} />
+          <Route path="employee-authenticated" element={<ProtectedRoute component={EmployeeAuthenticated} />} />
+          <Route path="admin-authenticated" element={<ProtectedRoute component={AdminAuthenticated} />} />
         </Route>
       </Routes>
     </Router>
@@ -79,10 +94,11 @@ function BrandLayout() {
         </div>
         <div className="nav-links">
           <Link to="/" style={{ fontSize: '14px', color: '#666' }}>← All Brands</Link>
-          <Link to="/brand">Home</Link>
-          <Link to="/brand/customer">Customer</Link>
-          <Link to="/brand/employee">Employee</Link>
-          <Link to="/brand/admin">Admin</Link>
+          {isAuthenticated ? (
+            <Link to="/brand/customer">My Dashboard</Link>
+          ) : (
+            <Link to="/brand">Home</Link>
+          )}
           {isAuthenticated && (
             <div className="user-profile">
               <span>👤 {user?.name || user?.email}</span>
