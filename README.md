@@ -1,74 +1,163 @@
-<<<<<<< HEAD
 # RetailZero Demo App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern React-based retail management application demonstrating authentication, role-based access control, and multi-page navigation. This project showcases a complete implementation of Auth0 authentication with protected routes and admin-level authorization.
 
-## Available Scripts
+## ✨ Features
 
-In the project directory, you can run:
+- **🔐 Authentication**: Secure login/logout functionality using Auth0
+- **🛡️ Protected Routes**: Role-based access control for sensitive pages
+- **👥 User Roles**: Support for regular users and administrators
+- **🎨 Modern UI**: Built with React 19 and React Router v7
+- **📱 Responsive Design**: Mobile-friendly interface
+- **🚀 Fast Development**: Hot module reloading with Create React App
+
+## 🏗️ Project Structure
+
+```
+retailzero-demo/
+├── public/
+│   ├── index.html
+│   ├── manifest.json
+│   └── robots.txt
+├── src/
+│   ├── pages/
+│   │   ├── LandingPage.js      # Public home page
+│   │   ├── Dashboard.js        # Protected user dashboard
+│   │   └── AdminPage.js        # Admin-only panel
+│   ├── App.js                  # Main app with routing
+│   ├── index.js                # Entry point
+│   └── App.css                 # Styles
+└── package.json
+```
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js (v14 or higher)
+- npm or yarn
+- Auth0 account (for authentication)
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/nolecram/retailzero-demo-app.git
+   cd retailzero-demo-app
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Set up Auth0:
+   - Create an Auth0 application at [auth0.com](https://auth0.com)
+   - Configure your Auth0 settings in your app
+   - Add `http://localhost:3000` to Allowed Callback URLs
+   - Add `http://localhost:3000` to Allowed Logout URLs
+
+4. Configure environment variables:
+   Create a `.env` file in the root directory:
+   ```env
+   REACT_APP_AUTH0_DOMAIN=your-domain.auth0.com
+   REACT_APP_AUTH0_CLIENT_ID=your-client-id
+   ```
+
+### Running the App
+
+Start the development server:
+```bash
+npm start
+```
+
+The app will open at [http://localhost:3000](http://localhost:3000)
+
+## 📋 Available Scripts
 
 ### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Runs the app in development mode with hot reloading.
 
 ### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Launches the test runner in interactive watch mode.
 
 ### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Builds the app for production to the `build` folder. Optimizes the build for best performance.
 
 ### `npm run eject`
+**Note: This is a one-way operation!** Ejects from Create React App for full configuration control.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 🔑 Authentication Flow
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. **Landing Page**: Public access, displays welcome message
+2. **Login**: Click "Log In" to authenticate via Auth0
+3. **Dashboard**: Protected route accessible to all authenticated users
+4. **Admin Panel**: Protected route accessible only to users with admin role
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 🛠️ Tech Stack
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- **React 19.2.0** - UI library
+- **React Router v7** - Client-side routing
+- **Auth0 React SDK** - Authentication and authorization
+- **Create React App** - Build tooling
+- **React Testing Library** - Testing utilities
 
-## Learn More
+## 🧪 Testing
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Run tests with:
+```bash
+npm test
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Tests are configured with:
+- Jest
+- React Testing Library
+- @testing-library/user-event
 
-### Code Splitting
+## 📦 Building for Production
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+1. Build the production bundle:
+   ```bash
+   npm run build
+   ```
 
-### Analyzing the Bundle Size
+2. The optimized files will be in the `build/` folder, ready to deploy.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## 🌐 Deployment
 
-### Making a Progressive Web App
+This app can be deployed to various platforms:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- **Vercel**: `vercel deploy`
+- **Netlify**: Drag and drop the `build` folder
+- **GitHub Pages**: Use `gh-pages` package
+- **AWS S3**: Upload the `build` folder to S3 bucket
 
-### Advanced Configuration
+See the [Create React App deployment docs](https://facebook.github.io/create-react-app/docs/deployment) for more options.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## 🤝 Contributing
 
-### Deployment
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## 📄 License
 
-### `npm run build` fails to minify
+This project is licensed under the MIT License.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-=======
-# retailzero-demo-app
->>>>>>> 6c951325c474b1d1b56c5a695b6e7266a077cb41
+## 🔗 Resources
+
+- [React Documentation](https://react.dev/)
+- [Auth0 Documentation](https://auth0.com/docs)
+- [React Router Documentation](https://reactrouter.com/)
+- [Create React App Documentation](https://create-react-app.dev/)
+
+## 👤 Author
+
+**nolecram**
+- GitHub: [@nolecram](https://github.com/nolecram)
+
+---
+
+Built with ❤️ using React and Auth0
