@@ -1,32 +1,63 @@
 # RetailZero Demo App
 
-A modern React-based retail management application demonstrating authentication, role-based access control, and multi-page navigation. This project showcases a complete implementation of Auth0 authentication with protected routes and admin-level authorization.
+A modern React application demonstrating **Auth0 authentication**, **role-based access control**, and **multi-brand architecture** using Auth0 Organizations. Built for the Auth0 technical exercise showcasing secure authentication patterns.
+
+## 📋 Technical Exercise Requirements
+
+This application satisfies the following requirements:
+
+### ✅ 1. Unsecured ("Open") Landing Page
+- **Route**: `/` (LandingPage.js)
+- **Access**: Public - No authentication required
+- **Features**: Brand showcase, login CTA, public information
+
+### ✅ 2. Protected Page for Any Authenticated User
+- **Route**: `/dashboard` (Dashboard.js)
+- **Access**: Any authenticated user
+- **Protection**: `withAuthenticationRequired` HOC
+- **Features**: User profile, organization info, personalized dashboard
+
+### ✅ 3. Protected Page for Admin Group Only
+- **Route**: `/admin` (AdminPage.js)
+- **Access**: Users with `admin` role only
+- **Protection**: `withAuthenticationRequired` + role-based authorization
+- **Features**: User management, brand overview, admin analytics
+
+📄 **[See detailed requirements verification →](./TECHNICAL_REQUIREMENTS.md)**
 
 ## ✨ Features
 
-- **🔐 Authentication**: Secure login/logout functionality using Auth0
-- **🛡️ Protected Routes**: Role-based access control for sensitive pages
-- **👥 User Roles**: Support for regular users and administrators
-- **🎨 Modern UI**: Built with React 19 and React Router v7
+- **� Auth0 Authentication**: Secure OAuth 2.0 login/logout with Organizations support
+- **🏢 Multi-Brand Architecture**: 5 retail brands (AutoZero, CampNation, BBQ1, OfficeZero, CandyZero)
+- **🛡️ Role-Based Access Control**: Admin and user role enforcement
+- **🎨 Dynamic Theming**: Brand-specific colors and logos
 - **📱 Responsive Design**: Mobile-friendly interface
-- **🚀 Fast Development**: Hot module reloading with Create React App
+- **� Brand Context**: React Context for global brand state management
 
 ## 🏗️ Project Structure
 
 ```
 retailzero-demo/
 ├── public/
+│   ├── logos/                  # Brand logos (AutoZero, CampNation, BBQ1, etc.)
 │   ├── index.html
-│   ├── manifest.json
-│   └── robots.txt
+│   └── manifest.json
 ├── src/
 │   ├── pages/
-│   │   ├── LandingPage.js      # Public home page
-│   │   ├── Dashboard.js        # Protected user dashboard
-│   │   └── AdminPage.js        # Admin-only panel
-│   ├── App.js                  # Main app with routing
-│   ├── index.js                # Entry point
-│   └── App.css                 # Styles
+│   │   ├── LandingPage.js      # ✅ PUBLIC: Unsecured landing page
+│   │   ├── Dashboard.js        # ✅ PROTECTED: Any authenticated user
+│   │   └── AdminPage.js        # ✅ ADMIN ONLY: Admin role required
+│   ├── components/
+│   │   └── BrandSelector.js    # Brand switching dropdown
+│   ├── context/
+│   │   └── BrandContext.js     # Global brand state management
+│   ├── config/
+│   │   └── brands.js           # 5 brand configurations with Auth0 Org IDs
+│   ├── App.js                  # Main app with routing and protection
+│   ├── App.css                 # Dynamic theming styles
+│   └── index.js                # Auth0Provider with Organizations
+├── scripts/
+│   └── create-organizations.js # Script to create Auth0 Organizations
 └── package.json
 ```
 
@@ -52,17 +83,20 @@ retailzero-demo/
    ```
 
 3. Set up Auth0:
-   - Create an Auth0 application at [auth0.com](https://auth0.com)
-   - Configure your Auth0 settings in your app
+   - **Domain**: `retailzero-demo.au.auth0.com` (already configured)
+   - **Client ID**: `xERyHPEBariMBWqKdMV2we1qFyhi3So6` (already configured)
+   - **Organizations**: 5 brands already created with real Organization IDs
+   - Alternatively, create your own Auth0 application at [auth0.com](https://auth0.com)
    - Add `http://localhost:3000` to Allowed Callback URLs
    - Add `http://localhost:3000` to Allowed Logout URLs
+   - Add `http://localhost:3000` to Allowed Web Origins
 
-4. Configure environment variables:
-   Create a `.env` file in the root directory:
-   ```env
-   REACT_APP_AUTH0_DOMAIN=your-domain.auth0.com
-   REACT_APP_AUTH0_CLIENT_ID=your-client-id
-   ```
+4. Organizations are pre-configured:
+   - **AutoZero**: `org_hC536v5MhZj2GMtF`
+   - **CampNation**: `org_BR45iMQDE2iNKP8R`
+   - **BBQ1**: `org_ubS05VW6UFh2xI1W`
+   - **OfficeZero**: `org_TxqSP6gqpe4cE0Tf`
+   - **CandyZero**: `org_bt36R0WKuJ3rtiuM`
 
 ### Running the App
 
@@ -87,20 +121,62 @@ Builds the app for production to the `build` folder. Optimizes the build for bes
 ### `npm run eject`
 **Note: This is a one-way operation!** Ejects from Create React App for full configuration control.
 
-## 🔑 Authentication Flow
+## 🔑 Authentication & Authorization
 
-1. **Landing Page**: Public access, displays welcome message
-2. **Login**: Click "Log In" to authenticate via Auth0
-3. **Dashboard**: Protected route accessible to all authenticated users
-4. **Admin Panel**: Protected route accessible only to users with admin role
+### Route Protection Summary
+
+| Route | Component | Access Level | Protection Method |
+|-------|-----------|--------------|-------------------|
+| `/` | LandingPage | **Public** | None - Open access ✅ |
+| `/dashboard` | Dashboard | **Authenticated Users** | `withAuthenticationRequired` HOC ✅ |
+| `/admin` | AdminPage | **Admin Role Only** | `withAuthenticationRequired` + role check ✅ |
+
+### Authentication Flow
+
+1. **Landing Page** (`/`)
+   - Public access for all visitors
+   - Displays brand information and login button
+   - No authentication required
+
+2. **User Login**
+   - Click "Get Started" or "Log In"
+   - Redirects to Auth0 Universal Login
+   - Authenticates with organization-scoped login
+   - Returns to application with tokens
+
+3. **Dashboard** (`/dashboard`)
+   - Protected route for authenticated users
+   - Shows user profile and organization info
+   - Accessible to all logged-in users regardless of role
+
+4. **Admin Panel** (`/admin`)
+   - Protected route with role-based authorization
+   - Requires `admin` role in user profile
+   - Shows user management and brand overview
+   - Displays "Access denied" message if user lacks admin role
+
+### Role Configuration
+
+Roles are assigned in Auth0 and read from the user's token:
+```javascript
+const roles = user?.['https://retailzero.com/roles'] || [];
+const isAdmin = roles.includes('admin');
+```
+
+To assign admin role in Auth0:
+1. Go to **User Management** → **Users**
+2. Select a user
+3. Navigate to **Roles** tab
+4. Assign the `admin` role
 
 ## 🛠️ Tech Stack
 
-- **React 19.2.0** - UI library
-- **React Router v7** - Client-side routing
-- **Auth0 React SDK** - Authentication and authorization
-- **Create React App** - Build tooling
-- **React Testing Library** - Testing utilities
+- **React 19.2.0** - Modern UI library with concurrent features
+- **React Router v7.9.4** - Client-side routing with protected routes
+- **@auth0/auth0-react v2.8.0** - Auth0 authentication SDK
+- **Auth0 Organizations** - Multi-tenant B2B architecture
+- **Create React App** - Zero-config build tooling
+- **React Context API** - Global state management for brands
 
 ## 🧪 Testing
 
@@ -152,6 +228,19 @@ This project is licensed under the MIT License.
 - [Auth0 Documentation](https://auth0.com/docs)
 - [React Router Documentation](https://reactrouter.com/)
 - [Create React App Documentation](https://create-react-app.dev/)
+
+## 📚 Project Documentation
+
+This project includes comprehensive documentation:
+
+- **[TECHNICAL_REQUIREMENTS.md](./TECHNICAL_REQUIREMENTS.md)** - Verification of exercise requirements ✅
+- **[MULTI_BRAND_ARCHITECTURE.md](./MULTI_BRAND_ARCHITECTURE.md)** - Multi-brand architecture details
+- **[SETUP_GUIDE.md](./SETUP_GUIDE.md)** - Step-by-step configuration guide
+- **[IMPLEMENTATION_SUMMARY.md](./IMPLEMENTATION_SUMMARY.md)** - Complete feature summary
+- **[AUTH0_SETUP_INSTRUCTIONS.md](./AUTH0_SETUP_INSTRUCTIONS.md)** - Auth0 troubleshooting guide
+- **[QUICK_SETUP.md](./QUICK_SETUP.md)** - 3-step quick start for Organizations
+- **[LOGO_URLS_FOR_AUTH0.md](./LOGO_URLS_FOR_AUTH0.md)** - GitHub URLs for brand logos
+- **[create-auth0-organizations.md](./create-auth0-organizations.md)** - Detailed organization creation
 
 ## 👤 Author
 
