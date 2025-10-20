@@ -68,7 +68,7 @@ const generateMockUsers = () => {
 function AdminPage() {
   const navigate = useNavigate();
   const { currentBrand } = useBrand();
-  const { user } = useAuth0();
+  const { user, logout } = useAuth0();
   const roles = user?.['https://retailzero.com/roles'] || [];
   const [securityData, setSecurityData] = useState([]);
   const [userData, setUserData] = useState([]);
@@ -302,6 +302,60 @@ function AdminPage() {
                     ))}
                   </div>
                 </div>
+              </div>
+              
+              {/* Action Buttons */}
+              <div style={{ display: 'flex', gap: '8px', marginTop: '12px', flexWrap: 'wrap' }}>
+                <button
+                  onClick={() => navigate('/')}
+                  style={{
+                    flex: '0 1 calc(50% - 4px)',
+                    padding: '8px 12px',
+                    background: 'rgba(255,255,255,0.2)',
+                    border: '1px solid rgba(255,255,255,0.3)',
+                    borderRadius: '6px',
+                    color: 'white',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.3)';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.2)';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
+                >
+                  ← Home
+                </button>
+                <button
+                  onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
+                  style={{
+                    flex: '0 1 calc(50% - 4px)',
+                    padding: '8px 12px',
+                    background: 'rgba(255,255,255,0.2)',
+                    border: '1px solid rgba(255,255,255,0.3)',
+                    borderRadius: '6px',
+                    color: 'white',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.3)';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.2)';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
+                >
+                  Logout →
+                </button>
               </div>
             </div>
           </div>

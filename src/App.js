@@ -4,6 +4,7 @@ import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 import { useBrand } from './context/BrandContext';
 import BrandSelector from './components/BrandSelector';
 import AuthRedirect from './components/AuthRedirect';
+import TokenInspector from './components/TokenInspector';
 import RetailZeroHome from './pages/RetailZeroHome';
 import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/Dashboard';
@@ -67,6 +68,7 @@ function App() {
   return (
     <>
       <AuthRedirect />
+      <TokenInspector />
       <Routes>
         <Route path="/" element={<RetailZeroHome />} />
         <Route path="/employee-login" element={<EmployeeLogin />} />
