@@ -7,7 +7,7 @@ import { BrandProvider } from './context/BrandContext';
 import './utils/clearAuth0Cache'; // Make clearAuth0Cache() available in console
 
 const onRedirectCallback = (appState) => {
-  // Use the appState returnTo if specified, otherwise stay on current path
+  // After Auth0 callback, navigate to the returnTo path or current path
   window.history.replaceState(
     {},
     document.title,

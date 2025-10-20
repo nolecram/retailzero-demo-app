@@ -26,6 +26,23 @@ function LandingPage() {
     loginWithRedirect({
       authorizationParams: {
         organization: currentBrand.orgId,
+      },
+      appState: {
+        returnTo: window.location.pathname
+      }
+    });
+  };
+
+  const handleSignup = () => {
+    loginWithRedirect({
+      authorizationParams: {
+        organization: currentBrand.orgId,
+        screen_hint: 'signup',
+        prompt: 'login', // Force the login screen to show
+      },
+      appState: {
+        returnTo: window.location.pathname,
+        targetOrg: currentBrand.orgId
       }
     });
   };
@@ -267,22 +284,59 @@ function LandingPage() {
         </ul>
         
         {!isAuthenticated && (
-          <button
-            onClick={handleLogin}
-            style={{
-              marginTop: '30px',
-              padding: '15px 40px',
-              fontSize: '18px',
-              backgroundColor: currentBrand.theme.primary,
-              color: 'white',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: 'pointer',
-              fontWeight: '600'
-            }}
-          >
-            Get Started with {currentBrand.name} →
-          </button>
+          <div style={{ 
+            marginTop: '30px',
+            display: 'flex',
+            gap: '15px',
+            justifyContent: 'center',
+            flexWrap: 'wrap'
+          }}>
+            <button
+              onClick={handleLogin}
+              style={{
+                padding: '15px 40px',
+                fontSize: '18px',
+                backgroundColor: currentBrand.theme.primary,
+                color: 'white',
+                border: 'none',
+                borderRadius: '10px',
+                cursor: 'pointer',
+                fontWeight: '600',
+                transition: 'all 0.2s',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+              onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+            >
+              Login to Your Account
+            </button>
+            <button
+              onClick={handleSignup}
+              style={{
+                padding: '15px 40px',
+                fontSize: '18px',
+                backgroundColor: 'white',
+                color: currentBrand.theme.primary,
+                border: `2px solid ${currentBrand.theme.primary}`,
+                borderRadius: '10px',
+                cursor: 'pointer',
+                fontWeight: '600',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = currentBrand.theme.primary;
+                e.currentTarget.style.color = 'white';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'white';
+                e.currentTarget.style.color = currentBrand.theme.primary;
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              Sign Up
+            </button>
+          </div>
         )}
       </div>
     </main>
