@@ -18,7 +18,7 @@ const ProtectedAdmin = withAuthenticationRequired(() => {
 });
 
 function App() {
-  const { isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
+  const { isAuthenticated, logout, user } = useAuth0();
   const { currentBrand } = useBrand();
 
   return (
