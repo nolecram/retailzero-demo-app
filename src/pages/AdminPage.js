@@ -1,14 +1,54 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useBrand } from '../context/BrandContext';
 import { useAuth0 } from '@auth0/auth0-react';
 import { BRANDS } from '../config/brands';
+
+// Mock data generator for security metrics
+const generateMockSecurityData = () => {
+  const now = new Date();
+  const locations = ['Sydney, AU', 'Melbourne, AU', 'Brisbane, AU', 'Perth, AU', 'Auckland, NZ', 'Singapore, SG'];
+  const statuses = ['success', 'success', 'success', 'success', 'failed']; // 80% success rate
+  
+  const recentLogins = [];
+  for (let i = 0; i < 15; i++) {
+    const brand = Object.values(BRANDS)[Math.floor(Math.random() * 5)];
+    const minutesAgo = Math.floor(Math.random() * 1440); // Last 24 hours
+    const timestamp = new Date(now - minutesAgo * 60000);
+    
+    recentLogins.push({
+      id: i,
+      email: `user${i + 1}@${brand.domain}`,
+      organization: brand.name,
+      ip: `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`,
+      location: locations[Math.floor(Math.random() * locations.length)],
+      timestamp: timestamp.toISOString(),
+      status: statuses[Math.floor(Math.random() * statuses.length)]
+    });
+  }
+  
+  return recentLogins.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+};
 
 function AdminPage() {
   const navigate = useNavigate();
   const { currentBrand } = useBrand();
   const { user } = useAuth0();
   const roles = user?.['https://retailzero.com/roles'] || [];
+  const [securityData, setSecurityData] = useState([]);
+
+  // Load mock security data on mount - MUST be before any conditional returns
+  useEffect(() => {
+    setSecurityData(generateMockSecurityData());
+  }, []);
+
+  const brandArray = Object.values(BRANDS);
+  
+  // Calculate security metrics
+  const totalUsers = 47; // Simulated total across all orgs
+  const activeToday = 23;
+  const failedLogins = securityData.filter(log => log.status === 'failed').length;
+  const mfaEnabled = 68; // percentage
 
   // Double-check admin access (should be handled by route protection, but good practice)
   if (!roles.includes('admin')) {
@@ -54,8 +94,6 @@ function AdminPage() {
       </div>
     );
   }
-
-  const brandArray = Object.values(BRANDS);
 
   return (
     <main style={{ 
@@ -207,53 +245,261 @@ function AdminPage() {
         padding: '40px'
       }}>
 
-      {/* Dashboard Widgets */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-        gap: '20px',
-        marginBottom: '40px'
-      }}>
-        <div style={{
-          background: 'white',
-          padding: '25px',
-          borderRadius: '12px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-          borderTop: '4px solid #28a745'
-        }}>
-          <div style={{ fontSize: '14px', color: '#666', marginBottom: '10px' }}>TOTAL BRANDS</div>
-          <div style={{ fontSize: '42px', fontWeight: 'bold', color: '#28a745', marginBottom: '5px' }}>
-            {brandArray.length}
+      {/* Security Metrics Section */}
+      <div style={{ marginBottom: '40px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', flexWrap: 'wrap', gap: '15px' }}>
+          <div>
+            <h2 style={{ fontSize: '28px', color: '#fff', marginBottom: '5px', fontWeight: '700' }}>
+              🔒 Security & Monitoring
+            </h2>
+            <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.8)', margin: 0 }}>
+              Real-time authentication metrics and security insights
+            </p>
           </div>
-          <div style={{ fontSize: '12px', color: '#999' }}>Active retail brands</div>
+          <a
+            href="https://auth0.com/docs/api/management/v2"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '10px 20px',
+              background: 'rgba(255,255,255,0.95)',
+              border: '2px solid rgba(255,255,255,0.3)',
+              borderRadius: '8px',
+              fontSize: '13px',
+              fontWeight: '600',
+              color: '#667eea',
+              textDecoration: 'none',
+              transition: 'all 0.2s',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'white';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(255,255,255,0.95)';
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+            }}
+          >
+            📚 Auth0 Management API Docs
+            <span style={{ fontSize: '16px' }}>→</span>
+          </a>
         </div>
 
+        {/* Security Metrics Cards */}
         <div style={{
-          background: 'white',
-          padding: '25px',
-          borderRadius: '12px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-          borderTop: '4px solid #007bff'
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+          gap: '20px',
+          marginBottom: '30px'
         }}>
-          <div style={{ fontSize: '14px', color: '#666', marginBottom: '10px' }}>USER MANAGEMENT</div>
-          <div style={{ fontSize: '42px', fontWeight: 'bold', color: '#007bff', marginBottom: '5px' }}>
-            ∞
+          <div style={{
+            background: 'white',
+            padding: '25px',
+            borderRadius: '12px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+            borderLeft: '4px solid #28a745'
+          }}>
+            <div style={{ fontSize: '13px', color: '#666', marginBottom: '10px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Users</div>
+            <div style={{ fontSize: '48px', fontWeight: 'bold', color: '#28a745', marginBottom: '5px', lineHeight: 1 }}>
+              {totalUsers}
+            </div>
+            <div style={{ fontSize: '12px', color: '#999' }}>Across all organizations</div>
           </div>
-          <div style={{ fontSize: '12px', color: '#999' }}>Multi-organization support</div>
+
+          <div style={{
+            background: 'white',
+            padding: '25px',
+            borderRadius: '12px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+            borderLeft: '4px solid #007bff'
+          }}>
+            <div style={{ fontSize: '13px', color: '#666', marginBottom: '10px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Active Today</div>
+            <div style={{ fontSize: '48px', fontWeight: 'bold', color: '#007bff', marginBottom: '5px', lineHeight: 1 }}>
+              {activeToday}
+            </div>
+            <div style={{ fontSize: '12px', color: '#999' }}>Daily active users</div>
+          </div>
+
+          <div style={{
+            background: 'white',
+            padding: '25px',
+            borderRadius: '12px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+            borderLeft: '4px solid #dc3545'
+          }}>
+            <div style={{ fontSize: '13px', color: '#666', marginBottom: '10px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Failed Logins</div>
+            <div style={{ fontSize: '48px', fontWeight: 'bold', color: '#dc3545', marginBottom: '5px', lineHeight: 1 }}>
+              {failedLogins}
+            </div>
+            <div style={{ fontSize: '12px', color: '#999' }}>Last 24 hours</div>
+          </div>
+
+          <div style={{
+            background: 'white',
+            padding: '25px',
+            borderRadius: '12px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+            borderLeft: '4px solid #ffc107'
+          }}>
+            <div style={{ fontSize: '13px', color: '#666', marginBottom: '10px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>MFA Enabled</div>
+            <div style={{ fontSize: '48px', fontWeight: 'bold', color: '#ffc107', marginBottom: '5px', lineHeight: 1 }}>
+              {mfaEnabled}%
+            </div>
+            <div style={{ fontSize: '12px', color: '#999' }}>Users with 2FA</div>
+          </div>
         </div>
 
+        {/* Recent Login Activity */}
         <div style={{
           background: 'white',
-          padding: '25px',
           borderRadius: '12px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-          borderTop: '4px solid #ffc107'
+          boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+          overflow: 'hidden'
         }}>
-          <div style={{ fontSize: '14px', color: '#666', marginBottom: '10px' }}>AUTH0 INTEGRATION</div>
-          <div style={{ fontSize: '42px', fontWeight: 'bold', color: '#ffc107', marginBottom: '5px' }}>
-            ✓
+          <div style={{ 
+            padding: '25px', 
+            borderBottom: '2px solid #f0f0f0',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            color: 'white'
+          }}>
+            <h3 style={{ fontSize: '20px', marginBottom: '5px', fontWeight: '700' }}>
+              🕐 Recent Login Activity
+            </h3>
+            <p style={{ fontSize: '13px', margin: 0, opacity: 0.9 }}>
+              Last 15 authentication events across all brands
+            </p>
           </div>
-          <div style={{ fontSize: '12px', color: '#999' }}>Organizations enabled</div>
+          
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ background: '#f8f9fa', borderBottom: '2px solid #e9ecef' }}>
+                  <th style={{ padding: '15px', textAlign: 'left', fontSize: '12px', fontWeight: '700', color: '#666', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Time</th>
+                  <th style={{ padding: '15px', textAlign: 'left', fontSize: '12px', fontWeight: '700', color: '#666', textTransform: 'uppercase', letterSpacing: '0.5px' }}>User</th>
+                  <th style={{ padding: '15px', textAlign: 'left', fontSize: '12px', fontWeight: '700', color: '#666', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Organization</th>
+                  <th style={{ padding: '15px', textAlign: 'left', fontSize: '12px', fontWeight: '700', color: '#666', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Location</th>
+                  <th style={{ padding: '15px', textAlign: 'left', fontSize: '12px', fontWeight: '700', color: '#666', textTransform: 'uppercase', letterSpacing: '0.5px' }}>IP Address</th>
+                  <th style={{ padding: '15px', textAlign: 'center', fontSize: '12px', fontWeight: '700', color: '#666', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {securityData.slice(0, 10).map((log, idx) => (
+                  <tr key={log.id} style={{ 
+                    borderBottom: '1px solid #f0f0f0',
+                    background: idx % 2 === 0 ? 'white' : '#fafafa',
+                    transition: 'background 0.2s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = '#f0f7ff'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = idx % 2 === 0 ? 'white' : '#fafafa'}
+                  >
+                    <td style={{ padding: '15px', fontSize: '13px', color: '#666', whiteSpace: 'nowrap' }}>
+                      {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </td>
+                    <td style={{ padding: '15px', fontSize: '13px', color: '#333', fontWeight: '500' }}>
+                      {log.email}
+                    </td>
+                    <td style={{ padding: '15px', fontSize: '13px', color: '#666' }}>
+                      {log.organization}
+                    </td>
+                    <td style={{ padding: '15px', fontSize: '13px', color: '#666' }}>
+                      {log.location}
+                    </td>
+                    <td style={{ padding: '15px', fontSize: '13px', color: '#666', fontFamily: 'monospace' }}>
+                      {log.ip}
+                    </td>
+                    <td style={{ padding: '15px', textAlign: 'center' }}>
+                      <span style={{
+                        padding: '4px 12px',
+                        borderRadius: '12px',
+                        fontSize: '11px',
+                        fontWeight: '700',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.5px',
+                        background: log.status === 'success' ? '#d4edda' : '#f8d7da',
+                        color: log.status === 'success' ? '#155724' : '#721c24'
+                      }}>
+                        {log.status === 'success' ? '✓ Success' : '✗ Failed'}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          
+          <div style={{ padding: '20px', textAlign: 'center', background: '#f8f9fa', borderTop: '1px solid #e9ecef' }}>
+            <p style={{ fontSize: '13px', color: '#666', margin: 0 }}>
+              💡 <strong>Production Note:</strong> This data would be fetched from{' '}
+              <a 
+                href="https://auth0.com/docs/api/management/v2/logs/get-logs" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                style={{ color: '#667eea', textDecoration: 'none', fontWeight: '600' }}
+              >
+                Auth0 Management API - GET /api/v2/logs
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* System Overview */}
+      <div style={{ marginBottom: '30px' }}>
+        <h2 style={{ fontSize: '28px', color: '#fff', marginBottom: '20px', fontWeight: '700' }}>
+          📊 System Overview
+        </h2>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gap: '20px'
+        }}>
+          <div style={{
+            background: 'white',
+            padding: '25px',
+            borderRadius: '12px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+            borderTop: '4px solid #28a745'
+          }}>
+            <div style={{ fontSize: '14px', color: '#666', marginBottom: '10px' }}>TOTAL BRANDS</div>
+            <div style={{ fontSize: '42px', fontWeight: 'bold', color: '#28a745', marginBottom: '5px' }}>
+              {brandArray.length}
+            </div>
+            <div style={{ fontSize: '12px', color: '#999' }}>Active retail brands</div>
+          </div>
+
+          <div style={{
+            background: 'white',
+            padding: '25px',
+            borderRadius: '12px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+            borderTop: '4px solid #007bff'
+          }}>
+            <div style={{ fontSize: '14px', color: '#666', marginBottom: '10px' }}>USER MANAGEMENT</div>
+            <div style={{ fontSize: '42px', fontWeight: 'bold', color: '#007bff', marginBottom: '5px' }}>
+              ∞
+            </div>
+            <div style={{ fontSize: '12px', color: '#999' }}>Multi-organization support</div>
+          </div>
+
+          <div style={{
+            background: 'white',
+            padding: '25px',
+            borderRadius: '12px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+            borderTop: '4px solid #ffc107'
+          }}>
+            <div style={{ fontSize: '14px', color: '#666', marginBottom: '10px' }}>AUTH0 INTEGRATION</div>
+            <div style={{ fontSize: '42px', fontWeight: 'bold', color: '#ffc107', marginBottom: '5px' }}>
+              ✓
+            </div>
+            <div style={{ fontSize: '12px', color: '#999' }}>Organizations enabled</div>
+          </div>
         </div>
       </div>
 
