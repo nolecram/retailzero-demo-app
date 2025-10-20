@@ -6,6 +6,14 @@ function LandingPage() {
   const { currentBrand } = useBrand();
   const { isAuthenticated, loginWithRedirect } = useAuth0();
 
+  const handleLogin = () => {
+    loginWithRedirect({
+      authorizationParams: {
+        organization: currentBrand.orgId
+      }
+    });
+  };
+
   return (
     <main style={{ textAlign: 'center', padding: '60px 20px' }}>
       <img 
@@ -48,7 +56,7 @@ function LandingPage() {
         
         {!isAuthenticated && (
           <button
-            onClick={() => loginWithRedirect()}
+            onClick={handleLogin}
             style={{
               marginTop: '30px',
               padding: '15px 40px',
@@ -61,7 +69,7 @@ function LandingPage() {
               fontWeight: '600'
             }}
           >
-            Get Started →
+            Get Started with {currentBrand.name} →
           </button>
         )}
       </div>

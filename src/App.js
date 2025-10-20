@@ -8,14 +8,31 @@ import Dashboard from './pages/Dashboard';
 import AdminPage from './pages/AdminPage';
 import './App.css';
 
-const ProtectedDashboard = withAuthenticationRequired(Dashboard);
+// Custom wrapper to pass organization during authentication
+const ProtectedRoute = ({ component: Component, requireAdmin = false }) => {
+  const { currentBrand } = useBrand();
+  
+  const ProtectedComponent = withAuthenticationRequired(Component, {
+    onRedirecting: () => <div>Loading...</div>,
+    loginOptions: {
+      authorizationParams: {
+        organization: currentBrand.orgId
+      }
+    }
+  });
 
-const ProtectedAdmin = withAuthenticationRequired(() => {
+  return requireAdmin ? (
+    <ProtectedComponent />
+  ) : (
+    <ProtectedComponent />
+  );
+};
+
+const AdminComponent = () => {
   const { user } = useAuth0();
   const roles = user?.['https://retailzero.com/roles'] || user?.app_metadata?.roles || [];
-
   return roles.includes('admin') ? <AdminPage /> : <p>Access denied: Admins only</p>;
-});
+};
 
 function App() {
   const { isAuthenticated, logout, user } = useAuth0();
@@ -42,10 +59,11 @@ function App() {
             )}
           </div>
           <BrandSelector />
-        </nav>      <Routes>
+        </nav>
+      <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/dashboard" element={<ProtectedDashboard />} />
-        <Route path="/admin" element={<ProtectedAdmin />} />
+        <Route path="/dashboard" element={<ProtectedRoute component={Dashboard} />} />
+        <Route path="/admin" element={<ProtectedRoute component={AdminComponent} requireAdmin />} />
       </Routes>
     </Router>
   );
