@@ -15,7 +15,7 @@ root.render(
     clientId="xERyHPEBariMBWqKdMV2we1qFyhi3So6"
     authorizationParams={{ 
       redirect_uri: window.location.origin,
-      // organization: currentBrand.orgId, // Commented out until real Auth0 Organizations are created
+      organization: currentBrand.orgId,
       // audience: 'https://api.retailzero.com', // Optional: API identifier
     }}
     useRefreshTokens={true}

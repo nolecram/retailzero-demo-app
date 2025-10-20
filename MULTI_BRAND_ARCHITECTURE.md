@@ -19,11 +19,11 @@ Auth0 Organizations provide the perfect solution for multi-tenant B2B applicatio
 
 | Brand | Organization ID | Primary Color | Secondary Color | Domain |
 |-------|----------------|---------------|-----------------|---------|
-| Brand A | `org_brandA123` | #FF6B6B | #4ECDC4 | brand-a.retailzero.com |
-| Brand B | `org_brandB456` | #95E1D3 | #38ADA9 | brand-b.retailzero.com |
-| Brand C | `org_brandC789` | #F38181 | #AA96DA | brand-c.retailzero.com |
-| Brand D | `org_brandD012` | #FCBAD3 | #FFFFD2 | brand-d.retailzero.com |
-| Brand E | `org_brandE345` | #A8D8EA | #AA96DA | brand-e.retailzero.com |
+| AutoZero | `org_hC536v5MhZj2GMtF` | #FF6B35 | #004E89 | autozero.retailzero.com |
+| CampNation | `org_BR45iMQDE2iNKP8R` | #2D6A4F | #52B788 | campnation.retailzero.com |
+| BBQ1 | `org_ubS05VW6UFh2xI1W` | #D00000 | #370617 | bbq1.retailzero.com |
+| OfficeZero | `org_TxqSP6gqpe4cE0Tf` | #4361EE | #3F37C9 | officezero.retailzero.com |
+| CandyZero | `org_bt36R0WKuJ3rtiuM` | #F72585 | #7209B7 | candyzero.retailzero.com |
 
 ## Implementation Details
 

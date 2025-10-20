@@ -4,7 +4,7 @@ export const BRANDS = {
     id: 'autozero',
     name: 'AutoZero',
     displayName: 'AutoZero',
-    orgId: 'org_autozero123', // Replace with actual Auth0 Organization ID
+    orgId: 'org_hC536v5MhZj2GMtF',
     primaryColor: '#FF6B35',
     secondaryColor: '#004E89',
     description: 'Your trusted source for automotive parts and accessories',
@@ -15,7 +15,7 @@ export const BRANDS = {
     id: 'campnation',
     name: 'CampNation',
     displayName: 'CampNation',
-    orgId: 'org_campnation123', // Replace with actual Auth0 Organization ID
+    orgId: 'org_BR45iMQDE2iNKP8R',
     primaryColor: '#2D6A4F',
     secondaryColor: '#52B788',
     description: 'Outdoor adventure gear and camping equipment',
@@ -26,7 +26,7 @@ export const BRANDS = {
     id: 'bbq1',
     name: 'BBQ1',
     displayName: 'BBQ1',
-    orgId: 'org_bbq1123', // Replace with actual Auth0 Organization ID
+    orgId: 'org_ubS05VW6UFh2xI1W',
     primaryColor: '#D00000',
     secondaryColor: '#370617',
     description: 'Premium BBQ equipment and grilling supplies',
@@ -37,7 +37,7 @@ export const BRANDS = {
     id: 'officezero',
     name: 'OfficeZero',
     displayName: 'OfficeZero',
-    orgId: 'org_officezero123', // Replace with actual Auth0 Organization ID
+    orgId: 'org_TxqSP6gqpe4cE0Tf',
     primaryColor: '#4361EE',
     secondaryColor: '#3F37C9',
     description: 'Office supplies and furniture for modern workspaces',
@@ -48,7 +48,7 @@ export const BRANDS = {
     id: 'candyzero',
     name: 'CandyZero',
     displayName: 'CandyZero',
-    orgId: 'org_candyzero123', // Replace with actual Auth0 Organization ID
+    orgId: 'org_bt36R0WKuJ3rtiuM',
     primaryColor: '#F72585',
     secondaryColor: '#7209B7',
     description: 'Sweet treats and confectionery delights',

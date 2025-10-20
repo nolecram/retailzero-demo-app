@@ -1,9 +1,17 @@
 # Auth0 Setup Instructions for Multi-Brand Architecture
 
 ## Current Issue
-The app is showing an error: `authorization request parameter organization must be an organization id`
+## Issue: "organization must be an organization id"
 
-This happens because the organization IDs in `src/config/brands.js` are **placeholder values** (`org_brandA123`, etc.) and not real Auth0 Organization IDs.
+✅ **RESOLVED** - Organization IDs have been updated with real Auth0 Organization IDs:
+
+- **AutoZero**: `org_hC536v5MhZj2GMtF`
+- **CampNation**: `org_BR45iMQDE2iNKP8R`
+- **BBQ1**: `org_ubS05VW6UFh2xI1W`
+- **OfficeZero**: `org_TxqSP6gqpe4cE0Tf`
+- **CandyZero**: `org_bt36R0WKuJ3rtiuM`
+
+The organization parameter has been enabled in `src/index.js` and users will now be properly scoped to their brand's organization.
 
 ## Solution: Create Auth0 Organizations
 

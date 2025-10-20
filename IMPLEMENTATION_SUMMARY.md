@@ -8,12 +8,12 @@ Your RetailZero demo application now fully supports **5 different retail brands*
 
 #### 1. **Multi-Brand Configuration System**
 - **File**: `src/config/brands.js`
-- 5 brands configured (Brand A through E)
+- 5 brands configured (AutoZero, CampNation, BBQ1, OfficeZero, CandyZero)
 - Each brand has:
   - Unique Organization ID for Auth0
   - Custom color theme (primary & secondary)
   - Brand name and domain
-  - Logo path (placeholder)
+  - Logo path
 
 #### 2. **Brand Context Management**
 - **Files**: `src/context/BrandContext.js`
@@ -83,20 +83,20 @@ Your RetailZero demo application now fully supports **5 different retail brands*
 ```
 Auth0 Tenant (retailzero-demo.au.auth0.com)
 │
-├─ Organization: Brand A (org_brandA123)
-│  └─ Users: Brand A customers/admins
+├─ Organization: AutoZero (org_hC536v5MhZj2GMtF)
+│  └─ Users: AutoZero customers/admins
 │
-├─ Organization: Brand B (org_brandB456)
-│  └─ Users: Brand B customers/admins
+├─ Organization: CampNation (org_BR45iMQDE2iNKP8R)
+│  └─ Users: CampNation customers/admins
 │
-├─ Organization: Brand C (org_brandC789)
-│  └─ Users: Brand C customers/admins
+├─ Organization: BBQ1 (org_ubS05VW6UFh2xI1W)
+│  └─ Users: BBQ1 customers/admins
 │
-├─ Organization: Brand D (org_brandD012)
-│  └─ Users: Brand D customers/admins
+├─ Organization: OfficeZero (org_TxqSP6gqpe4cE0Tf)
+│  └─ Users: OfficeZero customers/admins
 │
-└─ Organization: Brand E (org_brandE345)
-   └─ Users: Brand E customers/admins
+└─ Organization: CandyZero (org_bt36R0WKuJ3rtiuM)
+   └─ Users: CandyZero customers/admins
 ```
 
 ### Authentication Flow
@@ -125,11 +125,11 @@ Auth0 Tenant (retailzero-demo.au.auth0.com)
 
 | Brand | Org ID | Primary | Secondary | Status |
 |-------|--------|---------|-----------|--------|
-| Brand A | `org_brandA123` | #FF6B6B | #4ECDC4 | ✅ Configured |
-| Brand B | `org_brandB456` | #95E1D3 | #38ADA9 | ✅ Configured |
-| Brand C | `org_brandC789` | #F38181 | #AA96DA | ✅ Configured |
-| Brand D | `org_brandD012` | #FCBAD3 | #FFFFD2 | ✅ Configured |
-| Brand E | `org_brandE345` | #A8D8EA | #AA96DA | ✅ Configured |
+| AutoZero | `org_hC536v5MhZj2GMtF` | #FF6B35 | #004E89 | ✅ Configured |
+| CampNation | `org_BR45iMQDE2iNKP8R` | #2D6A4F | #52B788 | ✅ Configured |
+| BBQ1 | `org_ubS05VW6UFh2xI1W` | #D00000 | #370617 | ✅ Configured |
+| OfficeZero | `org_TxqSP6gqpe4cE0Tf` | #4361EE | #3F37C9 | ✅ Configured |
+| CandyZero | `org_bt36R0WKuJ3rtiuM` | #F72585 | #7209B7 | ✅ Configured |
 
 ---
 

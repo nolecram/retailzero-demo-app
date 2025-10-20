@@ -4,7 +4,7 @@
 
 Your RetailZero app now supports **5 different brands** using **Auth0 Organizations**:
 
-✅ **Brand A, B, C, D, E** - Each with unique colors and branding  
+✅ **AutoZero, CampNation, BBQ1, OfficeZero, CandyZero** - Each with unique colors and branding  
 ✅ **Dynamic brand switching** - Users see their brand's theme  
 ✅ **Organization-based authentication** - Each brand is an Auth0 Organization  
 ✅ **Brand-aware pages** - Landing, Dashboard, and Admin pages show brand context  
@@ -13,17 +13,17 @@ Your RetailZero app now supports **5 different brands** using **Auth0 Organizati
 ## How It Works
 
 ### 🎨 Brand Detection
-1. App detects brand from subdomain (e.g., `brand-a.retailzero.com`)
-2. Falls back to Brand A if no subdomain
+1. App detects brand from subdomain (e.g., `autozero.retailzero.com`)
+2. Falls back to AutoZero if no subdomain
 3. Demo mode: Use dropdown to switch brands
 
 ### 🔐 Auth0 Organizations
 Each brand maps to an Auth0 Organization:
-- **Brand A** → `org_brandA123`
-- **Brand B** → `org_brandB456`
-- **Brand C** → `org_brandC789`
-- **Brand D** → `org_brandD012`
-- **Brand E** → `org_brandE345`
+- **AutoZero** → `org_hC536v5MhZj2GMtF`
+- **CampNation** → `org_BR45iMQDE2iNKP8R`
+- **BBQ1** → `org_ubS05VW6UFh2xI1W`
+- **OfficeZero** → `org_TxqSP6gqpe4cE0Tf`
+- **CandyZero** → `org_bt36R0WKuJ3rtiuM`
 
 When users log in, they're scoped to their brand's organization.
 
@@ -31,13 +31,15 @@ When users log in, they're scoped to their brand's organization.
 
 ### [ ] 1. Create Auth0 Organizations
 
-In your Auth0 Dashboard:
+✅ **COMPLETED** - Organizations already created in Auth0:
 
-1. Go to **Organizations** → **Create Organization**
-2. Create 5 organizations:
-   - Name: Brand A, Brand B, Brand C, Brand D, Brand E
-3. Note the Organization IDs (format: `org_xxxxx`)
-4. Update `src/config/brands.js` with real Organization IDs
+1. **AutoZero** - `org_hC536v5MhZj2GMtF`
+2. **CampNation** - `org_BR45iMQDE2iNKP8R`
+3. **BBQ1** - `org_ubS05VW6UFh2xI1W`
+4. **OfficeZero** - `org_TxqSP6gqpe4cE0Tf`
+5. **CandyZero** - `org_bt36R0WKuJ3rtiuM`
+
+Organization IDs have been updated in `src/config/brands.js`.
 
 ### [ ] 2. Configure Application for Organizations
 
@@ -118,11 +120,11 @@ Then:
 
 Each brand has unique colors that are applied automatically:
 
-- **Brand A**: Red/Teal (#FF6B6B / #4ECDC4)
-- **Brand B**: Mint Green (#95E1D3 / #38ADA9)
-- **Brand C**: Pink/Purple (#F38181 / #AA96DA)
-- **Brand D**: Pink/Yellow (#FCBAD3 / #FFFFD2)
-- **Brand E**: Blue/Purple (#A8D8EA / #AA96DA)
+- **AutoZero**: Orange/Blue (#FF6B35 / #004E89)
+- **CampNation**: Green (#2D6A4F / #52B788)
+- **BBQ1**: Red/Dark Red (#D00000 / #370617)
+- **OfficeZero**: Blue/Purple (#4361EE / #3F37C9)
+- **CandyZero**: Pink/Purple (#F72585 / #7209B7)
 
 ## 📱 Pages Overview
 
