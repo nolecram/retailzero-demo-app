@@ -87,29 +87,31 @@ This document verifies that the RetailZero Demo App satisfies all technical exer
   // In App.js
   const ProtectedAdmin = withAuthenticationRequired(() => {
     const { user } = useAuth0();
-    const roles = user?.['https://retailzero.com/roles'] || 
-                  user?.app_metadata?.roles || [];
+    const roles = user?.['https://retailzero.com/roles'] || [];
 
-    return roles.includes('admin') ? 
-      <AdminPage /> : 
-      <p>Access denied: Admins only</p>;
+    return roles.includes('admin') ? (
+      <AdminPage />
+    ) : (
+      <div>Access Denied: Admins only</div>
+    );
   });
   
   <Route path="/admin" element={<ProtectedAdmin />} />
   ```
 
 **Features (Admin Only):**
-- Admin access badge
+- Admin access badge with user profile
 - User management widget
-- Brand configuration display
-- Analytics dashboard
-- Overview of all 5 retail brands
-- Admin user information
+- All 5 retail brands overview with visual cards
+- Brand configuration details table
+- System analytics dashboard
+- Color-coded brand display with org IDs
+- Current brand context highlighting
 
 **Protection Behavior:**
 - Unauthenticated users are redirected to Auth0 login
-- Authenticated users WITHOUT admin role see "Access denied: Admins only"
-- Only users with `admin` role in their token can view the page
+- Authenticated users WITHOUT admin role see "Access Denied: Admins only" message
+- Only users with `admin` role in their token can view the full admin panel
 
 **Role Assignment:**
 The `admin` role is checked from the user's JWT token at the custom claim:
@@ -120,9 +122,14 @@ The `admin` role is checked from the user's JWT token at the custom claim:
 1. Navigate to `http://localhost:3000/admin` without logging in
 2. ✅ Redirected to Auth0 Universal Login
 3. Log in with a non-admin user
-4. ✅ See "Access denied: Admins only" message
+4. ✅ See "Access denied: Admins only" message with current role displayed
 5. Log in with an admin user (role assigned in Auth0)
-6. ✅ Full admin panel displayed with all features
+6. ✅ Full admin panel displayed with:
+   - User profile with admin badge
+   - Dashboard widgets (total brands, user management, Auth0 integration status)
+   - All 5 brands overview with color swatches and org IDs
+   - Current brand configuration details
+   - Analytics placeholder
 
 ---
 

@@ -1,14 +1,67 @@
 import React from 'react';
 import { Routes, Route, Link, Outlet } from 'react-router-dom';
-import { useAuth0 } from '@auth0/auth0-react';
+import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 import { useBrand } from './context/BrandContext';
 import BrandSelector from './components/BrandSelector';
 import AuthRedirect from './components/AuthRedirect';
 import RetailZeroHome from './pages/RetailZeroHome';
 import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/Dashboard';
+import AdminPage from './pages/AdminPage';
 import EmployeeLogin from './pages/EmployeeLogin';
 import './App.css';
+
+// Protected route component for admin-only access
+function ProtectedAdminComponent() {
+  const { user } = useAuth0();
+  const roles = user?.['https://retailzero.com/roles'] || [];
+
+  return roles.includes('admin') ? (
+    <AdminPage />
+  ) : (
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '20px',
+      background: '#f5f5f5'
+    }}>
+      <div style={{
+        background: 'white',
+        padding: '60px 40px',
+        borderRadius: '20px',
+        textAlign: 'center',
+        maxWidth: '500px',
+        boxShadow: '0 10px 40px rgba(0,0,0,0.1)'
+      }}>
+        <div style={{
+          width: '80px',
+          height: '80px',
+          background: '#dc3545',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          margin: '0 auto 30px',
+          fontSize: '40px',
+          color: 'white'
+        }}>🚫</div>
+        <h1 style={{ fontSize: '32px', color: '#333', marginBottom: '15px' }}>
+          Access Denied
+        </h1>
+        <p style={{ fontSize: '18px', color: '#666', marginBottom: '10px' }}>
+          Admins only
+        </p>
+        <p style={{ fontSize: '14px', color: '#999' }}>
+          Your current role: {roles.length > 0 ? roles.join(', ') : 'None'}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+const ProtectedAdmin = withAuthenticationRequired(ProtectedAdminComponent);
 
 function App() {
   return (
@@ -17,6 +70,7 @@ function App() {
       <Routes>
         <Route path="/" element={<RetailZeroHome />} />
         <Route path="/employee-login" element={<EmployeeLogin />} />
+        <Route path="/admin" element={<ProtectedAdmin />} />
         <Route path="/brand" element={<BrandLayout />}>
           <Route index element={<LandingPage />} />
           <Route path="dashboard" element={<Dashboard />} />

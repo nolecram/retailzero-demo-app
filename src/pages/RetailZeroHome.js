@@ -428,6 +428,38 @@ function RetailZeroHome() {
               One central login for all RetailZero staff to manage multiple brands
             </p>
           </div>
+
+          {isAuthenticated && roles.includes('admin') && (
+            <div style={{
+              background: 'linear-gradient(135deg, rgba(40,167,69,0.2) 0%, rgba(40,167,69,0.3) 100%)',
+              borderRadius: '10px',
+              padding: '20px',
+              color: 'white',
+              fontSize: '14px',
+              cursor: 'pointer',
+              transition: 'all 0.3s',
+              border: '2px solid rgba(40,167,69,0.4)'
+            }}
+            onClick={() => navigate('/admin')}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(40,167,69,0.3) 0%, rgba(40,167,69,0.4) 100%)';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.borderColor = 'rgba(40,167,69,0.6)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(40,167,69,0.2) 0%, rgba(40,167,69,0.3) 100%)';
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.borderColor = 'rgba(40,167,69,0.4)';
+            }}
+            >
+              <p style={{ marginBottom: '10px', fontWeight: '600' }}>
+                🛡️ Admin Panel →
+              </p>
+              <p style={{ opacity: 0.9 }}>
+                Manage all brands, users, and system configurations
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>
