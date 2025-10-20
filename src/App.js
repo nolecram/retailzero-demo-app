@@ -6,6 +6,7 @@ import BrandSelector from './components/BrandSelector';
 import RetailZeroHome from './pages/RetailZeroHome';
 import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/Dashboard';
+import EmployeePortal from './pages/EmployeePortal';
 import AdminPage from './pages/AdminPage';
 import './App.css';
 
@@ -35,6 +36,12 @@ const AdminComponent = () => {
   return roles.includes('admin') ? <AdminPage /> : <p>Access denied: Admins only</p>;
 };
 
+const EmployeeComponent = () => {
+  const { user } = useAuth0();
+  const roles = user?.['https://retailzero.com/roles'] || user?.app_metadata?.roles || [];
+  return roles.includes('employee') || roles.includes('admin') ? <EmployeePortal /> : <p>Access denied: Employees only</p>;
+};
+
 function App() {
   return (
     <Router>
@@ -45,7 +52,8 @@ function App() {
         {/* Brand-specific pages with Nav */}
         <Route path="/brand" element={<BrandLayout />}>
           <Route index element={<LandingPage />} />
-          <Route path="dashboard" element={<ProtectedRoute component={Dashboard} />} />
+          <Route path="customer" element={<ProtectedRoute component={Dashboard} />} />
+          <Route path="employee" element={<ProtectedRoute component={EmployeeComponent} />} />
           <Route path="admin" element={<ProtectedRoute component={AdminComponent} requireAdmin />} />
         </Route>
       </Routes>
@@ -68,7 +76,8 @@ function BrandLayout() {
         <div className="nav-links">
           <Link to="/" style={{ fontSize: '14px', color: '#666' }}>← All Brands</Link>
           <Link to="/brand">Home</Link>
-          <Link to="/brand/dashboard">Dashboard</Link>
+          <Link to="/brand/customer">Customer</Link>
+          <Link to="/brand/employee">Employee</Link>
           <Link to="/brand/admin">Admin</Link>
           {isAuthenticated && (
             <div className="user-profile">

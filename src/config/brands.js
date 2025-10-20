@@ -11,7 +11,7 @@ export const BRANDS = {
       primary: '#FF6B35',
       secondary: '#004E89'
     },
-    description: 'Your trusted source for automotive parts and accessories',
+    description: 'Automotive parts and accessories',
     logo: '/logos/autozero.png',
     features: ['Quality Parts', 'Expert Support', 'Fast Shipping']
   },

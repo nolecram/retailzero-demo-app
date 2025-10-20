@@ -8,6 +8,14 @@ function Dashboard() {
 
   return (
     <main style={{ padding: '40px 20px' }}>
+      <div style={{ marginBottom: '30px' }}>
+        <h1 style={{ color: currentBrand.theme.primary, fontSize: '36px' }}>
+          Customer Portal
+        </h1>
+        <p style={{ color: '#666', fontSize: '18px' }}>
+          Manage your account and orders at {currentBrand.displayName}
+        </p>
+      </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '20px' }}>
         <img 
           src={currentBrand.logo} 

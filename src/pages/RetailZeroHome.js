@@ -31,6 +31,16 @@ function RetailZeroHome() {
           marginBottom: '40px',
           boxShadow: '0 10px 40px rgba(0,0,0,0.1)'
         }}>
+          <img 
+            src="/logos/retailzero.png" 
+            alt="RetailZero"
+            style={{
+              height: '100px',
+              width: '100px',
+              objectFit: 'contain',
+              marginBottom: '20px'
+            }}
+          />
           <h1 style={{
             fontSize: '56px',
             background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
