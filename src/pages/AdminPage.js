@@ -184,43 +184,8 @@ function AdminPage() {
         }}>
           {/* Header Content */}
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '30px', flexWrap: 'wrap' }}>
-            {/* Left: Back Button */}
-            <div style={{ flex: '0 0 240px', minWidth: '240px' }}>
-              <button
-                onClick={() => navigate('/')}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '10px 20px',
-                  background: 'white',
-                  border: '2px solid #e0e0e0',
-                  borderRadius: '8px',
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  color: '#666',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = '#667eea';
-                  e.currentTarget.style.color = '#667eea';
-                  e.currentTarget.style.transform = 'translateX(-3px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = '#e0e0e0';
-                  e.currentTarget.style.color = '#666';
-                  e.currentTarget.style.transform = 'translateX(0)';
-                }}
-              >
-                <span style={{ fontSize: '16px' }}>←</span>
-                <span>Back to RetailZero Home</span>
-              </button>
-            </div>
-
-            {/* Center: Title */}
-            <div style={{ flex: 1, minWidth: '300px', textAlign: 'center' }}>
+            {/* Left: Title */}
+            <div style={{ flex: 1, minWidth: '300px' }}>
               <h1 style={{ 
                 fontSize: '36px', 
                 color: '#333', 
