@@ -30,25 +30,95 @@ const generateMockSecurityData = () => {
   return recentLogins.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 };
 
+// Mock data generator for user management
+const generateMockUsers = () => {
+  const brands = Object.values(BRANDS);
+  const roles = ['customer', 'customer', 'customer', 'employee', 'admin']; // More customers
+  const firstNames = ['John', 'Sarah', 'Michael', 'Emma', 'David', 'Lisa', 'James', 'Emily', 'Robert', 'Jessica', 'Daniel', 'Olivia', 'Chris', 'Sophia', 'Matthew'];
+  const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Wilson', 'Anderson', 'Taylor', 'Thomas', 'Moore'];
+  const statuses = ['active', 'active', 'active', 'active', 'blocked']; // 80% active
+  
+  const users = [];
+  for (let i = 0; i < 30; i++) {
+    const brand = brands[Math.floor(Math.random() * brands.length)];
+    const role = roles[Math.floor(Math.random() * roles.length)];
+    const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+    const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+    const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}@${brand.domain}`;
+    const daysAgo = Math.floor(Math.random() * 30);
+    const lastLogin = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000);
+    
+    users.push({
+      id: `user_${i + 1}`,
+      name: `${firstName} ${lastName}`,
+      email: email,
+      organization: brand.name,
+      orgId: brand.orgId,
+      role: role,
+      status: statuses[Math.floor(Math.random() * statuses.length)],
+      mfaEnabled: Math.random() > 0.3, // 70% have MFA
+      lastLogin: lastLogin.toISOString(),
+      createdAt: new Date(lastLogin - Math.random() * 180 * 24 * 60 * 60 * 1000).toISOString()
+    });
+  }
+  
+  return users.sort((a, b) => b.lastLogin.localeCompare(a.lastLogin));
+};
+
 function AdminPage() {
   const navigate = useNavigate();
   const { currentBrand } = useBrand();
   const { user } = useAuth0();
   const roles = user?.['https://retailzero.com/roles'] || [];
   const [securityData, setSecurityData] = useState([]);
+  const [userData, setUserData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterOrg, setFilterOrg] = useState('all');
+  const [filterRole, setFilterRole] = useState('all');
+  
+  // Accordion state
+  const [expandedSections, setExpandedSections] = useState({
+    security: true,
+    system: false,
+    users: false
+  });
+  
+  const toggleSection = (section) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
 
-  // Load mock security data on mount - MUST be before any conditional returns
+  // Load mock data on mount - MUST be before any conditional returns
   useEffect(() => {
     setSecurityData(generateMockSecurityData());
+    setUserData(generateMockUsers());
   }, []);
 
   const brandArray = Object.values(BRANDS);
   
   // Calculate security metrics
-  const totalUsers = 47; // Simulated total across all orgs
+  const totalUsers = userData.length;
   const activeToday = 23;
   const failedLogins = securityData.filter(log => log.status === 'failed').length;
-  const mfaEnabled = 68; // percentage
+  const mfaEnabled = Math.round((userData.filter(u => u.mfaEnabled).length / userData.length) * 100) || 68;
+  
+  // Filter users based on search and filters
+  const filteredUsers = userData.filter(user => {
+    const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                         user.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesOrg = filterOrg === 'all' || user.organization === filterOrg;
+    const matchesRole = filterRole === 'all' || user.role === filterRole;
+    return matchesSearch && matchesOrg && matchesRole;
+  });
+  
+  // Calculate users per organization
+  const usersByOrg = brandArray.map(brand => ({
+    name: brand.name,
+    count: userData.filter(u => u.organization === brand.name).length,
+    color: brand.primaryColor
+  }));
 
   // Double-check admin access (should be handled by route protection, but good practice)
   if (!roles.includes('admin')) {
@@ -246,17 +316,65 @@ function AdminPage() {
       }}>
 
       {/* Security Metrics Section */}
-      <div style={{ marginBottom: '40px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', flexWrap: 'wrap', gap: '15px' }}>
-          <div>
-            <h2 style={{ fontSize: '28px', color: '#fff', marginBottom: '5px', fontWeight: '700' }}>
-              🔒 Security & Monitoring
-            </h2>
-            <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.8)', margin: 0 }}>
-              Real-time authentication metrics and security insights
-            </p>
+      <div style={{ marginBottom: '25px' }}>
+        <div 
+          onClick={() => toggleSection('security')}
+          style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'space-between', 
+            padding: '20px 30px',
+            background: 'rgba(255,255,255,0.95)',
+            borderRadius: '12px',
+            cursor: 'pointer',
+            marginBottom: expandedSections.security ? '20px' : '0',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+            transition: 'all 0.3s ease'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px', flex: 1 }}>
+            <div style={{
+              width: '50px',
+              height: '50px',
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              borderRadius: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '24px'
+            }}>
+              🔒
+            </div>
+            <div>
+              <h2 style={{ fontSize: '24px', color: '#333', margin: 0, fontWeight: '700' }}>
+                Security & Monitoring
+              </h2>
+              <p style={{ fontSize: '13px', color: '#666', margin: 0 }}>
+                Real-time authentication metrics
+              </p>
+            </div>
           </div>
-          <a
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+            {!expandedSections.security && (
+              <div style={{ fontSize: '13px', color: '#666', fontWeight: '600' }}>
+                {totalUsers} users • {failedLogins} failed logins
+              </div>
+            )}
+            <div style={{
+              fontSize: '24px',
+              color: '#667eea',
+              transition: 'transform 0.3s ease',
+              transform: expandedSections.security ? 'rotate(180deg)' : 'rotate(0deg)'
+            }}>
+              ▼
+            </div>
+          </div>
+        </div>
+
+        {expandedSections.security && (
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '15px' }}>
+              <a
             href="https://auth0.com/docs/api/management/v2"
             target="_blank"
             rel="noopener noreferrer"
@@ -447,13 +565,68 @@ function AdminPage() {
             </p>
           </div>
         </div>
+          </div>
+        )}
       </div>
 
       {/* System Overview */}
-      <div style={{ marginBottom: '30px' }}>
-        <h2 style={{ fontSize: '28px', color: '#fff', marginBottom: '20px', fontWeight: '700' }}>
-          📊 System Overview
-        </h2>
+      <div style={{ marginBottom: '25px' }}>
+        <div 
+          onClick={() => toggleSection('system')}
+          style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'space-between', 
+            padding: '20px 30px',
+            background: 'rgba(255,255,255,0.95)',
+            borderRadius: '12px',
+            cursor: 'pointer',
+            marginBottom: expandedSections.system ? '20px' : '0',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+            transition: 'all 0.3s ease'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px', flex: 1 }}>
+            <div style={{
+              width: '50px',
+              height: '50px',
+              background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)',
+              borderRadius: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '24px'
+            }}>
+              📊
+            </div>
+            <div>
+              <h2 style={{ fontSize: '24px', color: '#333', margin: 0, fontWeight: '700' }}>
+                System Overview
+              </h2>
+              <p style={{ fontSize: '13px', color: '#666', margin: 0 }}>
+                Brand statistics and system configuration
+              </p>
+            </div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+            {!expandedSections.system && (
+              <div style={{ fontSize: '13px', color: '#666', fontWeight: '600' }}>
+                {brandArray.length} brands • Auth0 enabled
+              </div>
+            )}
+            <div style={{
+              fontSize: '24px',
+              color: '#28a745',
+              transition: 'transform 0.3s ease',
+              transform: expandedSections.system ? 'rotate(180deg)' : 'rotate(0deg)'
+            }}>
+              ▼
+            </div>
+          </div>
+        </div>
+
+        {expandedSections.system && (
+          <div>
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
@@ -501,19 +674,18 @@ function AdminPage() {
             <div style={{ fontSize: '12px', color: '#999' }}>Organizations enabled</div>
           </div>
         </div>
-      </div>
 
-      {/* All Brands Overview */}
-      <div style={{
-        background: 'white',
-        padding: '30px',
-        borderRadius: '12px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-        marginBottom: '30px'
-      }}>
-        <h2 style={{ fontSize: '24px', color: '#333', marginBottom: '20px' }}>
-          All Retail Brands
-        </h2>
+        {/* All Brands Overview */}
+        <div style={{
+          background: 'white',
+          padding: '30px',
+          borderRadius: '12px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          marginBottom: '30px'
+        }}>
+          <h2 style={{ fontSize: '24px', color: '#333', marginBottom: '20px' }}>
+            All Retail Brands
+          </h2>
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
@@ -670,34 +842,331 @@ function AdminPage() {
             </tbody>
           </table>
         </div>
+        </div>
+        </div>
+        )}
       </div>
 
-      {/* Analytics Placeholder */}
-      <div style={{
-        background: 'white',
-        padding: '30px',
-        borderRadius: '12px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-      }}>
-        <h2 style={{ fontSize: '24px', color: '#333', marginBottom: '20px' }}>
-          Analytics Dashboard
-        </h2>
-        <div style={{
-          padding: '60px',
-          textAlign: 'center',
-          background: '#f8f9fa',
-          borderRadius: '8px',
-          border: '2px dashed #dee2e6'
-        }}>
-          <div style={{ fontSize: '48px', marginBottom: '15px' }}>📊</div>
-          <p style={{ fontSize: '18px', color: '#666', marginBottom: '10px' }}>
-            Analytics Coming Soon
-          </p>
-          <p style={{ fontSize: '14px', color: '#999' }}>
-            Multi-brand performance metrics and insights
-          </p>
+      {/* User Management Section */}
+      <div style={{ marginBottom: '25px' }}>
+        <div 
+          onClick={() => toggleSection('users')}
+          style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'space-between', 
+            padding: '20px 30px',
+            background: 'rgba(255,255,255,0.95)',
+            borderRadius: '12px',
+            cursor: 'pointer',
+            marginBottom: expandedSections.users ? '20px' : '0',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+            transition: 'all 0.3s ease'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px', flex: 1 }}>
+            <div style={{
+              width: '50px',
+              height: '50px',
+              background: 'linear-gradient(135deg, #007bff 0%, #17a2b8 100%)',
+              borderRadius: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '24px'
+            }}>
+              👥
+            </div>
+            <div>
+              <h2 style={{ fontSize: '24px', color: '#333', margin: 0, fontWeight: '700' }}>
+                User Management
+              </h2>
+              <p style={{ fontSize: '13px', color: '#666', margin: 0 }}>
+                Manage users across all organizations
+              </p>
+            </div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+            {!expandedSections.users && (
+              <div style={{ fontSize: '13px', color: '#666', fontWeight: '600' }}>
+                {totalUsers} users • {mfaEnabled}% MFA enabled
+              </div>
+            )}
+            <div style={{
+              fontSize: '24px',
+              color: '#007bff',
+              transition: 'transform 0.3s ease',
+              transform: expandedSections.users ? 'rotate(180deg)' : 'rotate(0deg)'
+            }}>
+              ▼
+            </div>
+          </div>
         </div>
+
+        {expandedSections.users && (
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '15px' }}>
+              <a
+            href="https://auth0.com/docs/api/management/v2/users"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '10px 20px',
+              background: 'rgba(255,255,255,0.95)',
+              border: '2px solid rgba(255,255,255,0.3)',
+              borderRadius: '8px',
+              fontSize: '13px',
+              fontWeight: '600',
+              color: '#667eea',
+              textDecoration: 'none',
+              transition: 'all 0.2s',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'white';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(255,255,255,0.95)';
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+            }}
+          >
+            📚 Auth0 Users API Docs
+            <span style={{ fontSize: '16px' }}>→</span>
+          </a>
+        </div>
+
+        {/* Users per Organization */}
+        <div style={{
+          background: 'white',
+          padding: '30px',
+          borderRadius: '12px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+          marginBottom: '25px'
+        }}>
+          <h3 style={{ fontSize: '18px', color: '#333', marginBottom: '20px', fontWeight: '700' }}>
+            Users by Organization
+          </h3>
+          <div style={{ display: 'grid', gap: '15px' }}>
+            {usersByOrg.map(org => (
+              <div key={org.name} style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                <div style={{ minWidth: '140px', fontSize: '14px', fontWeight: '600', color: '#333' }}>
+                  {org.name}
+                </div>
+                <div style={{ flex: 1, background: '#f0f0f0', borderRadius: '8px', overflow: 'hidden', height: '32px', position: 'relative' }}>
+                  <div style={{
+                    width: `${(org.count / totalUsers) * 100}%`,
+                    height: '100%',
+                    background: org.color,
+                    borderRadius: '8px',
+                    transition: 'width 0.3s ease'
+                  }} />
+                </div>
+                <div style={{ minWidth: '60px', textAlign: 'right', fontSize: '16px', fontWeight: '700', color: org.color }}>
+                  {org.count} users
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Search and Filter Controls */}
+        <div style={{
+          background: 'white',
+          padding: '25px',
+          borderRadius: '12px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+          marginBottom: '25px'
+        }}>
+          <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', alignItems: 'center' }}>
+            <div style={{ flex: '1 1 300px' }}>
+              <input
+                type="text"
+                placeholder="🔍 Search by name or email..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  border: '2px solid #e0e0e0',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  outline: 'none',
+                  transition: 'border-color 0.2s'
+                }}
+                onFocus={(e) => e.target.style.borderColor = '#667eea'}
+                onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
+              />
+            </div>
+            <div style={{ flex: '0 1 200px' }}>
+              <select
+                value={filterOrg}
+                onChange={(e) => setFilterOrg(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  border: '2px solid #e0e0e0',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  outline: 'none',
+                  cursor: 'pointer',
+                  background: 'white'
+                }}
+              >
+                <option value="all">All Organizations</option>
+                {brandArray.map(brand => (
+                  <option key={brand.id} value={brand.name}>{brand.name}</option>
+                ))}
+              </select>
+            </div>
+            <div style={{ flex: '0 1 180px' }}>
+              <select
+                value={filterRole}
+                onChange={(e) => setFilterRole(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  border: '2px solid #e0e0e0',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  outline: 'none',
+                  cursor: 'pointer',
+                  background: 'white'
+                }}
+              >
+                <option value="all">All Roles</option>
+                <option value="customer">Customer</option>
+                <option value="employee">Employee</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+          </div>
+          <div style={{ marginTop: '15px', fontSize: '13px', color: '#666' }}>
+            Showing <strong>{filteredUsers.length}</strong> of <strong>{totalUsers}</strong> users
+          </div>
+        </div>
+
+        {/* User Directory Table */}
+        <div style={{
+          background: 'white',
+          borderRadius: '12px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+          overflow: 'hidden'
+        }}>
+          <div style={{ 
+            padding: '25px', 
+            borderBottom: '2px solid #f0f0f0',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            color: 'white'
+          }}>
+            <h3 style={{ fontSize: '20px', marginBottom: '5px', fontWeight: '700' }}>
+              � User Directory
+            </h3>
+            <p style={{ fontSize: '13px', margin: 0, opacity: 0.9 }}>
+              Complete list of users across all organizations
+            </p>
+          </div>
+          
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ background: '#f8f9fa', borderBottom: '2px solid #e9ecef' }}>
+                  <th style={{ padding: '15px', textAlign: 'left', fontSize: '12px', fontWeight: '700', color: '#666', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Name</th>
+                  <th style={{ padding: '15px', textAlign: 'left', fontSize: '12px', fontWeight: '700', color: '#666', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Email</th>
+                  <th style={{ padding: '15px', textAlign: 'left', fontSize: '12px', fontWeight: '700', color: '#666', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Organization</th>
+                  <th style={{ padding: '15px', textAlign: 'center', fontSize: '12px', fontWeight: '700', color: '#666', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Role</th>
+                  <th style={{ padding: '15px', textAlign: 'center', fontSize: '12px', fontWeight: '700', color: '#666', textTransform: 'uppercase', letterSpacing: '0.5px' }}>MFA</th>
+                  <th style={{ padding: '15px', textAlign: 'center', fontSize: '12px', fontWeight: '700', color: '#666', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Status</th>
+                  <th style={{ padding: '15px', textAlign: 'left', fontSize: '12px', fontWeight: '700', color: '#666', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Last Login</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredUsers.slice(0, 20).map((user, idx) => (
+                  <tr key={user.id} style={{ 
+                    borderBottom: '1px solid #f0f0f0',
+                    background: idx % 2 === 0 ? 'white' : '#fafafa',
+                    transition: 'background 0.2s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = '#f0f7ff'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = idx % 2 === 0 ? 'white' : '#fafafa'}
+                  >
+                    <td style={{ padding: '15px', fontSize: '14px', color: '#333', fontWeight: '600' }}>
+                      {user.name}
+                    </td>
+                    <td style={{ padding: '15px', fontSize: '13px', color: '#666' }}>
+                      {user.email}
+                    </td>
+                    <td style={{ padding: '15px', fontSize: '13px', color: '#666' }}>
+                      {user.organization}
+                    </td>
+                    <td style={{ padding: '15px', textAlign: 'center' }}>
+                      <span style={{
+                        padding: '4px 12px',
+                        borderRadius: '12px',
+                        fontSize: '11px',
+                        fontWeight: '700',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.5px',
+                        background: user.role === 'admin' ? '#ffc107' : user.role === 'employee' ? '#17a2b8' : '#28a745',
+                        color: 'white'
+                      }}>
+                        {user.role}
+                      </span>
+                    </td>
+                    <td style={{ padding: '15px', textAlign: 'center', fontSize: '18px' }}>
+                      {user.mfaEnabled ? '✅' : '⚪'}
+                    </td>
+                    <td style={{ padding: '15px', textAlign: 'center' }}>
+                      <span style={{
+                        padding: '4px 12px',
+                        borderRadius: '12px',
+                        fontSize: '11px',
+                        fontWeight: '700',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.5px',
+                        background: user.status === 'active' ? '#d4edda' : '#f8d7da',
+                        color: user.status === 'active' ? '#155724' : '#721c24'
+                      }}>
+                        {user.status}
+                      </span>
+                    </td>
+                    <td style={{ padding: '15px', fontSize: '13px', color: '#666', whiteSpace: 'nowrap' }}>
+                      {new Date(user.lastLogin).toLocaleDateString()} {new Date(user.lastLogin).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          
+          <div style={{ padding: '20px', textAlign: 'center', background: '#f8f9fa', borderTop: '1px solid #e9ecef' }}>
+            <p style={{ fontSize: '13px', color: '#666', margin: 0, marginBottom: '10px' }}>
+              💡 <strong>Production Implementation:</strong> This data would be fetched from Auth0 Management API
+            </p>
+            <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', flexWrap: 'wrap', fontSize: '12px' }}>
+              <a href="https://auth0.com/docs/api/management/v2/users/get-users" target="_blank" rel="noopener noreferrer" style={{ color: '#667eea', textDecoration: 'none', fontWeight: '600' }}>
+                📖 GET /api/v2/users
+              </a>
+              <span style={{ color: '#ccc' }}>|</span>
+              <a href="https://auth0.com/docs/api/management/v2/users/post-users" target="_blank" rel="noopener noreferrer" style={{ color: '#667eea', textDecoration: 'none', fontWeight: '600' }}>
+                📖 POST /api/v2/users
+              </a>
+              <span style={{ color: '#ccc' }}>|</span>
+              <a href="https://auth0.com/docs/api/management/v2/organizations/post-members" target="_blank" rel="noopener noreferrer" style={{ color: '#667eea', textDecoration: 'none', fontWeight: '600' }}>
+                📖 POST /api/v2/organizations/{'{id}'}/members
+              </a>
+            </div>
+          </div>
+        </div>
+          </div>
+        )}
       </div>
+      
       </div>
     </main>
   );
