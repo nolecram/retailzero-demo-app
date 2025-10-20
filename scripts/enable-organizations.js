@@ -107,19 +107,27 @@ async function updateApplication() {
 // Step 2: Enable application in each organization
 async function enableApplicationInOrganization(org) {
   try {
-    // Check if application is already enabled
-    const existingApps = await makeRequest('GET', `/organizations/${org.id}/enabled_connections`);
+    // First, get the connection ID for the organization (usually Username-Password-Authentication)
+    const connections = await makeRequest('GET', `/connections?name=Username-Password-Authentication`);
     
-    // Enable application for this organization
+    if (!connections || connections.length === 0) {
+      console.error(`   ❌ ${org.name}: No connection found`);
+      return false;
+    }
+    
+    const connectionId = connections[0].id;
+    
+    // Enable the connection for this organization
     const data = {
-      client_id: CLIENT_ID
+      connection_id: connectionId,
+      assign_membership_on_login: false
     };
     
-    await makeRequest('POST', `/organizations/${org.id}/enabled_connections/${CLIENT_ID}`, data);
+    await makeRequest('POST', `/organizations/${org.id}/enabled_connections`, data);
     console.log(`   ✅ ${org.name} (${org.id})`);
     return true;
   } catch (error) {
-    if (error.message.includes('409') || error.message.includes('already exists')) {
+    if (error.message.includes('409') || error.message.includes('already')) {
       console.log(`   ✓  ${org.name} (already enabled)`);
       return true;
     }
