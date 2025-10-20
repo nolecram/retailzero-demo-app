@@ -77,47 +77,85 @@ function RetailZeroHome() {
 
         {/* RetailZero Header */}
         <div style={{
-          background: 'white',
+          background: 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 100%)',
+          backdropFilter: 'blur(10px)',
           borderRadius: '20px',
-          padding: '40px',
+          padding: '60px 40px',
           marginBottom: '40px',
-          boxShadow: '0 10px 40px rgba(0,0,0,0.1)'
+          boxShadow: '0 20px 60px rgba(102,126,234,0.15), 0 0 0 1px rgba(255,255,255,0.3)',
+          border: '1px solid rgba(255,255,255,0.4)',
+          position: 'relative',
+          overflow: 'hidden'
         }}>
-          <img 
-            src="/logos/retailzero.png" 
-            alt="RetailZero"
-            style={{
-              height: '100px',
-              width: '100px',
-              objectFit: 'contain',
-              marginBottom: '20px'
-            }}
-          />
-          <h1 style={{
-            fontSize: '56px',
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            marginBottom: '20px',
-            fontWeight: '800'
-          }}>
-            RetailZero
-          </h1>
-          <p style={{
-            fontSize: '24px',
-            color: '#666',
-            marginBottom: '10px'
-          }}>
-            Multi-Brand Retail Platform
-          </p>
-          <p style={{
-            fontSize: '16px',
-            color: '#999',
-            maxWidth: '600px',
-            margin: '0 auto'
-          }}>
-            Secure authentication and management across all your favorite retail brands
-          </p>
+          {/* Decorative elements */}
+          <div style={{
+            position: 'absolute',
+            top: '-50%',
+            right: '-10%',
+            width: '400px',
+            height: '400px',
+            background: 'radial-gradient(circle, rgba(102,126,234,0.1) 0%, transparent 70%)',
+            borderRadius: '50%',
+            pointerEvents: 'none'
+          }} />
+          <div style={{
+            position: 'absolute',
+            bottom: '-30%',
+            left: '-5%',
+            width: '300px',
+            height: '300px',
+            background: 'radial-gradient(circle, rgba(118,75,162,0.08) 0%, transparent 70%)',
+            borderRadius: '50%',
+            pointerEvents: 'none'
+          }} />
+          
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <img 
+              src="/logos/retailzero.png" 
+              alt="RetailZero"
+              style={{
+                height: '280px',
+                width: '280px',
+                objectFit: 'contain',
+                marginBottom: '30px',
+                filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.1))'
+              }}
+            />
+            <p style={{
+              fontSize: '28px',
+              color: '#333',
+              marginBottom: '15px',
+              fontWeight: '600',
+              letterSpacing: '-0.5px'
+            }}>
+              Multi-Brand Retail Platform
+            </p>
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '10px',
+              background: 'linear-gradient(135deg, rgba(235,84,36,0.1) 0%, rgba(209,65,38,0.1) 100%)',
+              padding: '12px 24px',
+              borderRadius: '50px',
+              border: '2px solid rgba(235,84,36,0.2)'
+            }}>
+              <span style={{
+                fontSize: '18px',
+                color: '#666',
+                fontWeight: '500'
+              }}>
+                Powered by
+              </span>
+              <span style={{
+                fontSize: '22px',
+                color: '#EB5424',
+                fontWeight: '700',
+                letterSpacing: '-0.5px'
+              }}>
+                Auth0
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* Brand Selection */}
@@ -235,6 +273,111 @@ function RetailZeroHome() {
               </button>
             </div>
           ))}
+          
+          {/* Auth0 Explore Card */}
+          <div
+            onClick={() => window.open('https://auth0.com', '_blank')}
+            style={{
+              background: 'white',
+              borderRadius: '15px',
+              padding: '30px',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              boxShadow: '0 5px 20px rgba(0,0,0,0.1)',
+              border: `3px solid transparent`,
+              position: 'relative',
+              overflow: 'hidden'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-5px)';
+              e.currentTarget.style.boxShadow = '0 15px 40px rgba(0,0,0,0.2)';
+              e.currentTarget.style.borderColor = '#EB5424';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 5px 20px rgba(0,0,0,0.1)';
+              e.currentTarget.style.borderColor = 'transparent';
+            }}
+          >
+            {/* Color stripe */}
+            <div style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: '5px',
+              background: 'linear-gradient(90deg, #EB5424, #D14126)'
+            }} />
+
+            <div style={{
+              height: '80px',
+              width: '80px',
+              margin: '0 auto 20px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '48px'
+            }}>
+              🔐
+            </div>
+            
+            <h3 style={{
+              fontSize: '24px',
+              color: '#EB5424',
+              marginBottom: '10px',
+              fontWeight: '700'
+            }}>
+              Explore Auth0
+            </h3>
+            <p style={{
+              fontSize: '14px',
+              color: '#666',
+              marginBottom: '20px',
+              lineHeight: '1.6'
+            }}>
+              Learn more about the authentication platform powering this demo
+            </p>
+
+            {/* Features */}
+            <div style={{ marginBottom: '20px' }}>
+              <div style={{
+                fontSize: '12px',
+                color: '#888',
+                marginBottom: '5px'
+              }}>
+                ✓ Enterprise Identity Platform
+              </div>
+              <div style={{
+                fontSize: '12px',
+                color: '#888',
+                marginBottom: '5px'
+              }}>
+                ✓ Multi-Organization Support
+              </div>
+            </div>
+
+            <button style={{
+              background: '#EB5424',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              padding: '12px 24px',
+              fontSize: '16px',
+              fontWeight: '600',
+              cursor: 'pointer',
+              width: '100%',
+              transition: 'all 0.2s'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.opacity = '0.9';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.opacity = '1';
+            }}
+            >
+              Visit Auth0.com →
+            </button>
+          </div>
         </div>
 
         {/* Footer Info */}
