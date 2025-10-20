@@ -1,4 +1,22 @@
 // Brand configuration for RetailZero
+
+// Central organization for all employees and admins across brands
+export const RETAILZERO_ORG = {
+  id: 'retailzero',
+  name: 'RetailZero',
+  displayName: 'RetailZero',
+  orgId: 'org_NEED_TO_CREATE', // This will be created for employees/admins
+  primaryColor: '#667eea',
+  secondaryColor: '#764ba2',
+  theme: {
+    primary: '#667eea',
+    secondary: '#764ba2'
+  },
+  description: 'Central organization for RetailZero employees and administrators',
+  logo: '/logos/retailzero.png',
+  isInternal: true
+};
+
 export const BRANDS = {
   AUTO_ZERO: {
     id: 'autozero',

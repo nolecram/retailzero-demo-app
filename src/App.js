@@ -7,6 +7,7 @@ import RetailZeroHome from './pages/RetailZeroHome';
 import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/Dashboard';
 import EmployeePortal from './pages/EmployeePortal';
+import EmployeeLogin from './pages/EmployeeLogin';
 import AdminPage from './pages/AdminPage';
 import './App.css';
 
@@ -48,6 +49,9 @@ function App() {
       <Routes>
         {/* RetailZero Home - No Nav */}
         <Route path="/" element={<RetailZeroHome />} />
+        
+        {/* Employee/Admin Login - Central Organization */}
+        <Route path="/employee-login" element={<EmployeeLogin />} />
         
         {/* Brand-specific pages with Nav */}
         <Route path="/brand" element={<BrandLayout />}>

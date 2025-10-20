@@ -187,18 +187,52 @@ function RetailZeroHome() {
 
         {/* Footer Info */}
         <div style={{
-          background: 'rgba(255,255,255,0.1)',
-          borderRadius: '10px',
-          padding: '20px',
-          color: 'white',
-          fontSize: '14px'
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gap: '20px',
+          marginBottom: '20px'
         }}>
-          <p style={{ marginBottom: '10px' }}>
-            🔒 Secured by Auth0 Organizations
-          </p>
-          <p style={{ opacity: 0.8 }}>
-            Each brand operates in its own isolated organization with role-based access control
-          </p>
+          <div style={{
+            background: 'rgba(255,255,255,0.1)',
+            borderRadius: '10px',
+            padding: '20px',
+            color: 'white',
+            fontSize: '14px'
+          }}>
+            <p style={{ marginBottom: '10px', fontWeight: '600' }}>
+              🔒 Customer Access
+            </p>
+            <p style={{ opacity: 0.8 }}>
+              Each brand operates in its own isolated organization with secure customer authentication
+            </p>
+          </div>
+
+          <div style={{
+            background: 'rgba(255,255,255,0.15)',
+            borderRadius: '10px',
+            padding: '20px',
+            color: 'white',
+            fontSize: '14px',
+            cursor: 'pointer',
+            transition: 'all 0.3s'
+          }}
+          onClick={() => window.location.href = '/employee-login'}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(255,255,255,0.25)';
+            e.currentTarget.style.transform = 'translateY(-2px)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'rgba(255,255,255,0.15)';
+            e.currentTarget.style.transform = 'translateY(0)';
+          }}
+          >
+            <p style={{ marginBottom: '10px', fontWeight: '600' }}>
+              👔 Employee & Admin Access →
+            </p>
+            <p style={{ opacity: 0.8 }}>
+              One central login for all RetailZero staff to manage multiple brands
+            </p>
+          </div>
         </div>
       </div>
     </div>
