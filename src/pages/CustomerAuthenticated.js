@@ -67,7 +67,7 @@ function CustomerAuthenticated() {
 
         <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
           <Link 
-            to="/brand"
+            to="/"
             style={{
               display: 'inline-block',
               padding: '12px 30px',

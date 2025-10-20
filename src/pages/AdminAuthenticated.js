@@ -66,7 +66,7 @@ function AdminAuthenticated() {
         </p>
 
         <Link 
-          to="/brand"
+          to="/"
           style={{
             display: 'inline-block',
             padding: '12px 30px',
@@ -79,7 +79,7 @@ function AdminAuthenticated() {
             transition: 'background-color 0.3s'
           }}
         >
-          ← Back to {currentBrand.displayName} Home
+          ← Back to Home
         </Link>
       </div>
     </main>
