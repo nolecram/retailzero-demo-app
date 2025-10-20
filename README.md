@@ -39,7 +39,7 @@ Visit `http://localhost:3000`
 |------|--------------|--------|
 | **Customer** | Single brand only | Brand-specific landing pages |
 | **Employee** | All brands + internal tools | RetailZero home |
-| **Admin** | Full access to all portals | RetailZero home with admin features |
+| **Admin** | Full access + admin panel | RetailZero home with admin panel access |
 
 ### Organizations
 
@@ -49,6 +49,8 @@ Visit `http://localhost:3000`
 ### Key Components
 
 - **LandingPage.js**: Brand landing pages with organization security
+- **Dashboard.js**: Protected customer dashboard for any authenticated user
+- **AdminPage.js**: Admin-only panel with role verification and all-brands overview
 - **AuthRedirect.js**: Post-login role-based routing logic
 - **BrandContext.js**: Global brand state management
 - **BrandSelector**: Dropdown for switching brands (employees/admins only)
@@ -66,7 +68,6 @@ retailzero-demo/
 │   │   ├── LandingPage.js      # Brand landing pages with org security
 │   │   ├── Dashboard.js        # Protected customer dashboard
 │   │   ├── AdminPage.js        # Admin-only management panel
-│   │   ├── EmployeePortal.js   # Employee tools and features
 │   │   ├── EmployeeLogin.js    # Central login for staff
 │   │   └── RetailZeroHome.js   # Main hub with brand selector
 │   ├── components/
@@ -139,9 +140,9 @@ retailzero-demo/
 - `/brand` - Brand landing pages (public, org-scoped login)
 
 ### Protected Routes
-- `/dashboard` - Customer dashboard (authenticated)
+- `/brand/dashboard` - Customer dashboard (authenticated)
 - `/admin` - Admin panel (admin role required)
-- `/employee` - Employee portal (employee/admin roles)
+- `/employee-login` - Employee/admin login portal
 
 ### Authentication Flow
 
