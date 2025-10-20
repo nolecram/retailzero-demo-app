@@ -1,8 +1,9 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, Outlet } from 'react-router-dom';
 import { withAuthenticationRequired, useAuth0 } from '@auth0/auth0-react';
 import { useBrand } from './context/BrandContext';
 import BrandSelector from './components/BrandSelector';
+import RetailZeroHome from './pages/RetailZeroHome';
 import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/Dashboard';
 import AdminPage from './pages/AdminPage';
@@ -35,37 +36,53 @@ const AdminComponent = () => {
 };
 
 function App() {
+  return (
+    <Router>
+      <Routes>
+        {/* RetailZero Home - No Nav */}
+        <Route path="/" element={<RetailZeroHome />} />
+        
+        {/* Brand-specific pages with Nav */}
+        <Route path="/brand" element={<BrandLayout />}>
+          <Route index element={<LandingPage />} />
+          <Route path="dashboard" element={<ProtectedRoute component={Dashboard} />} />
+          <Route path="admin" element={<ProtectedRoute component={AdminComponent} requireAdmin />} />
+        </Route>
+      </Routes>
+    </Router>
+  );
+}
+
+// Layout component for brand-specific pages
+function BrandLayout() {
   const { isAuthenticated, logout, user } = useAuth0();
   const { currentBrand } = useBrand();
 
   return (
-    <Router>
-        <nav className="main-nav">
-          <div className="nav-brand">
-            <img src={currentBrand.logo} alt={`${currentBrand.displayName} logo`} className="brand-logo" />
-            <h2>{currentBrand.displayName}</h2>
-          </div>
-          <div className="nav-links">
-            <Link to="/">Home</Link>
-            <Link to="/dashboard">Dashboard</Link>
-            <Link to="/admin">Admin</Link>
-            {isAuthenticated && (
-              <div className="user-profile">
-                <span>👤 {user?.name || user?.email}</span>
-                <button onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
-                  Logout
-                </button>
-              </div>
-            )}
-          </div>
-          <BrandSelector />
-        </nav>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/dashboard" element={<ProtectedRoute component={Dashboard} />} />
-        <Route path="/admin" element={<ProtectedRoute component={AdminComponent} requireAdmin />} />
-      </Routes>
-    </Router>
+    <>
+      <nav className="main-nav">
+        <div className="nav-brand">
+          <img src={currentBrand.logo} alt={`${currentBrand.displayName} logo`} className="brand-logo" />
+          <h2>{currentBrand.displayName}</h2>
+        </div>
+        <div className="nav-links">
+          <Link to="/" style={{ fontSize: '14px', color: '#666' }}>← All Brands</Link>
+          <Link to="/brand">Home</Link>
+          <Link to="/brand/dashboard">Dashboard</Link>
+          <Link to="/brand/admin">Admin</Link>
+          {isAuthenticated && (
+            <div className="user-profile">
+              <span>👤 {user?.name || user?.email}</span>
+              <button onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
+                Logout
+              </button>
+            </div>
+          )}
+        </div>
+        <BrandSelector />
+      </nav>
+      <Outlet />
+    </>
   );
 }
 
