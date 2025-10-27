@@ -33,8 +33,11 @@ Visit `http://localhost:3000`
 - Email: `customer1+autozero@goingtobuy.com`
 - Password: `Melbourne.2005`
 
-📖 **[Full Setup Guide →](./docs/SETUP.md)**
-📝 **[Secrets Configuration →](./docs/SECRETS_CONFIGURATION.md)** - How to set up Auth0 credentials safely
+� **Documentation:**
+- **[Quick Start Guide →](./docs/FIRST_STEPS.md)** - Get running in 5 minutes
+- **[Full Setup Guide →](./docs/SETUP.md)** - Detailed setup instructions
+- **[Secrets Configuration →](./docs/SECRETS_CONFIGURATION.md)** - Environment variables
+- **[Documentation Index →](./docs/INDEX.md)** - All guides
 
 ## 🏗️ Architecture
 
