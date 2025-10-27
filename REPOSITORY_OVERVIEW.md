@@ -15,7 +15,7 @@
 │                    RetailZero Platform                       │
 ├─────────────────────────────────────────────────────────────┤
 │                                                               │
-│  Auth0 Tenant: retailzero-demo.au.auth0.com                 │
+│  Auth0 Tenant: YOUR_AUTH0_DOMAIN                            │
 │  ├── RetailZero Org (Central)                               │
 │  │   └── Admins & Employees (global access to all brands)   │
 │  │                                                           │
@@ -148,9 +148,9 @@ retailzero-demo/
       "command": "npx",
       "args": ["-y", "@auth0/auth0-mcp-server"],
       "env": {
-        "AUTH0_DOMAIN": "retailzero-demo.au.auth0.com",
-        "AUTH0_CLIENT_ID": "xERyHPEBariMBWqKdMV2we1qFyhi3So6",
-        "AUTH0_CLIENT_SECRET": "rLFagAsEQdgR2NBURQk8BP3u17hiKzABLtHNDVN78nXbMxg5adViZdfKQWqX-Kqa"
+        "AUTH0_DOMAIN": "YOUR_AUTH0_DOMAIN",
+        "AUTH0_CLIENT_ID": "YOUR_AUTH0_CLIENT_ID",
+        "AUTH0_CLIENT_SECRET": "YOUR_AUTH0_CLIENT_SECRET"
       }
     }
   }
@@ -181,7 +181,7 @@ With MCP configured, an AI assistant can:
 ## 🔌 APIs Used
 
 ### 1. **Auth0 Management API**
-**Endpoint**: `https://retailzero-demo.au.auth0.com/api/v2/`
+**Endpoint**: `https://YOUR_AUTH0_DOMAIN/api/v2/`
 
 **Operations**:
 - `GET /api/v2/organizations` - List all organizations

@@ -19,6 +19,10 @@ A modern React application demonstrating **Auth0 authentication**, **role-based 
 # Install dependencies
 npm install
 
+# Setup Auth0 configuration
+cp .env.example .env.local
+# Edit .env.local with your Auth0 credentials (see docs/SECRETS_CONFIGURATION.md)
+
 # Start development server
 npm start
 ```
@@ -30,6 +34,7 @@ Visit `http://localhost:3000`
 - Password: `Melbourne.2005`
 
 📖 **[Full Setup Guide →](./docs/SETUP.md)**
+📝 **[Secrets Configuration →](./docs/SECRETS_CONFIGURATION.md)** - How to set up Auth0 credentials safely
 
 ## 🏗️ Architecture
 

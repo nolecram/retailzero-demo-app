@@ -1,0 +1,20 @@
+# MCP Server Configuration Template
+# Copy this to ~/.config/claude/mcp-config.json or use with Claude Desktop
+# Update with YOUR credentials from Auth0 Management API
+
+{
+  "mcpServers": {
+    "auth0": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@auth0/auth0-mcp-server"
+      ],
+      "env": {
+        "AUTH0_DOMAIN": "YOUR_AUTH0_DOMAIN",
+        "AUTH0_CLIENT_ID": "YOUR_MANAGEMENT_API_CLIENT_ID",
+        "AUTH0_CLIENT_SECRET": "YOUR_MANAGEMENT_API_CLIENT_SECRET"
+      }
+    }
+  }
+}
